@@ -4,20 +4,19 @@
     <table :class="{'zd-table-wrapper':true,'zd-table-striped':striped,'zd-table-border':border}">
       <thead>
         <tr class="zd-table-cloumn-tr">
-          <slot></slot>
+          <slot />
         </tr>
-       </thead>
-       <tbody>
-        <tr class="zd-table-cloumn-tr" v-for="(item,index) in data" :key="index">
-          <slot name="tbody" :row='item'>
-          </slot>
+      </thead>
+      <tbody>
+        <tr v-for="(item,index) in data" :key="index" class="zd-table-cloumn-tr">
+          <slot name="tbody" :row="item" />
         </tr>
-       </tbody>
-        <tbody v-if="data.length === 0">
-          <tr>
-            <td class="fixed-left-th" colspan="20">暂无数据</td>
-          </tr>
-        </tbody>
+      </tbody>
+      <tbody v-if="data.length === 0">
+        <tr>
+          <td class="fixed-left-th" colspan="20">暂无数据</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>
@@ -39,47 +38,63 @@ export default {
       default: false // 是否边框
     }
   },
-  watch: {
-    data (newValue, oldValue) {
-      this.data = newValue
-    }
-  },
   data () {
     return {
       className: (new Date().getTime()).toString() // 独一无二类名，防止一个页面多个table冲突
     }
   },
+  watch: {
+    data (newValue, oldValue) {
+      this.data = newValue
+    }
+  },
   mounted () {
-    let domTable = document.getElementsByClassName(this.className)[0]
+    const domTable = document.getElementsByClassName(this.className)[0]
+    // 首次判断右边是否固定并且有滚动条
+    if (domTable.clientWidth !== domTable.scrollWidth - domTable.scrollLeft) {
+      setTimeout(() => {
+        this.addOrRemoveClass(domTable, 'add', 'right')
+      }, 200)
+    }
     domTable.addEventListener('scroll', this.getScroll)
   },
   methods: {
     getScroll (e) {
       // 滚动条事件 固定列添加阴影效果
       if (e.target.scrollLeft > 0) {
-        this.addOrRemoveClass(e, 'add')
+        this.addOrRemoveClass(e.target, 'add')
       } else {
-        this.addOrRemoveClass(e, 'remove')
+        this.addOrRemoveClass(e.target, 'remove')
+      }
+      if (e.target.clientWidth === e.target.scrollWidth - e.target.scrollLeft) {
+        // 到达最右边取消阴影
+        this.addOrRemoveClass(e.target, 'remove', 'right')
+      } else {
+        // 未到达最右边增加阴影
+        this.addOrRemoveClass(e.target, 'add', 'right')
       }
     },
-    addOrRemoveClass (e, type) {
+    addOrRemoveClass (e, type, fixed = 'left') {
       // 删除或者添加节点
-      let tr = e.target.getElementsByClassName('zd-table-cloumn-tr')
+      const tr = e.getElementsByClassName('zd-table-cloumn-tr')
       for (let i = 0; i < tr.length; i++) {
-        let fixedLeftTh = tr[i].getElementsByClassName('fixed-left-th')// 只加在每一个tr的固定列最后一个
-        let fixedLeftTd = tr[i].getElementsByClassName('fixed-left-td')// 只加在每一个td的固定列最后一个
+        const fixedLeftTh = tr[i].getElementsByClassName('fixed-' + fixed + '-th')// 只加在每一个tr的固定列最后一个
+        const fixedLeftTd = tr[i].getElementsByClassName('fixed-' + fixed + '-td')// 只加在每一个td的固定列最后一个
         if (fixedLeftTh.length > 0) {
+          const num = fixed === 'left' ? fixedLeftTh.length - 1 : 0
           if (type === 'add') {
-            fixedLeftTh[fixedLeftTh.length - 1].classList.add('fixed-left-shadow')
+            fixedLeftTh[num].classList.add('fixed-' + fixed + '-shadow')
           } else if (type === 'remove') {
-            fixedLeftTh[fixedLeftTh.length - 1].classList.remove('fixed-left-shadow')
+            fixedLeftTh[num].classList.remove('fixed-' + fixed + '-shadow')
           }
         }
         if (fixedLeftTd.length > 0) {
+          const num = fixed === 'left' ? fixedLeftTd.length - 1 : 0
+
           if (type === 'add') {
-            fixedLeftTd[fixedLeftTd.length - 1].classList.add('fixed-left-shadow')
+            fixedLeftTd[num].classList.add('fixed-' + fixed + '-shadow')
           } else if (type === 'remove') {
-            fixedLeftTd[fixedLeftTd.length - 1].classList.remove('fixed-left-shadow')
+            fixedLeftTd[num].classList.remove('fixed-' + fixed + '-shadow')
           }
         }
       }
@@ -93,17 +108,21 @@ export default {
 .zd-table {
   position: relative;
   overflow: auto;
+  max-height: 300px;
   table {
     border-collapse: collapse;
     overflow: auto;
-    table-layout: fixed;
+    // table-layout: fixed;
     min-width: 100%;
     th,
     td {
+      min-width: 50px;
       padding: 5px;
       text-align: center;
-      white-space: nowrap;
       padding: 10px 10px;
+    }
+    td{
+      white-space: nowrap;
     }
 
     th:first-child,
@@ -183,6 +202,10 @@ export default {
     .fixed-left-shadow{
       // 固定列悬浮阴影
       box-shadow: 6px 0 5px -2px rgba(0,0,0,.12); //右边阴影
+    }
+    .fixed-right-shadow{
+       // 固定列悬浮阴影
+      box-shadow: -6px 0 5px -2px rgba(0,0,0,.12); //右边阴影
     }
 
   }

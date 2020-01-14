@@ -26,11 +26,6 @@ export default {
     return {
     }
   },
-  mounted () {
-    if (this.fixed) {
-      setFixedWidthTd(this.$parent.className, this.fixed) // 设置多个固定列的距离
-    }
-  },
   watch: {
     data (newValue, oldValue) {
       // 监听table值的变化
@@ -38,8 +33,17 @@ export default {
     },
     fixed (newValue, oldValue) {
       if (newValue) {
-        setFixedWidthTd(this.$parent.className, newValue) // 设置多个固定列的距离
+        setTimeout(() => {
+          setFixedWidthTd(this.$parent.className, newValue) // 设置多个固定列的距离
+        }, 200)
       }
+    }
+  },
+  mounted () {
+    if (this.fixed) {
+      setTimeout(() => {
+        setFixedWidthTd(this.$parent.className, this.fixed) // 设置多个固定列的距离
+      }, 200)
     }
   }
 }

@@ -7,6 +7,7 @@
         <p><a href="#初始实例">初始实例</a></p>
         <p><a href="#斑马线与边框">斑马线与边框</a></p>
         <p><a href="#固定列">固定列</a></p>
+        <p><a href="#间隔固定列">间隔固定列</a></p>
         <!-- <h3>链接</h3> -->
         <!-- <a><a href="https://github.com/a873969678/linshengji-ui">git仓库地址</a></p> -->
       </div>
@@ -62,6 +63,30 @@
               <!-- 表头 -->
               <zd-table-head label='固定left' fixed="left" />
               <zd-table-head label='固定left' fixed="left" />
+              <zd-table-head label='字段2' v-for="(item,index) in 20" :key="index" />
+              <zd-table-head label='固定right' fixed="right" />
+              <zd-table-head label='固定right' fixed="right" />
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body prop='name' fixed="left" :data="scope.row" />
+                <zd-table-body prop='name' fixed="left" :data="scope.row" />
+                <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 20" :key="index" />
+                <zd-table-body prop='name' fixed="right" :data="scope.row" />
+                <zd-table-body prop='name' fixed="right" :data="scope.row" />
+            </template>
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{ datajggdl }}
+          </p>
+
+          <h3 id="间隔固定列">间隔固定列</h3>
+          <p class="tip">在需要的地方加上fixed固定，拖动到制定位置时会自动合并</p>
+          <div>
+            <zd-table border striped :data='data'>
+              <!-- 表头 -->
+              <zd-table-head label='固定left' fixed="left" />
+              <zd-table-head label='固定left' fixed="left" />
               <zd-table-head label='字段1' v-for="(item,index) in 4" :key="index+'a'" />
               <zd-table-head label='我也是固定' fixed="left" />
               <zd-table-head label='字段2' v-for="(item,index) in 20" :key="index" />
@@ -76,12 +101,12 @@
                 <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 20" :key="index" />
                 <zd-table-body prop='name' fixed="right" :data="scope.row" />
                 <zd-table-body prop='name' fixed="right" :data="scope.row" />
-            </template>
+              </template>
             </zd-table>
           </div>
-          <!-- <p class="hljs">
-            {{databmx}}
-          </p> -->
+          <p class="hljs">
+            {{datajggdl1}}
+          </p>
 
           <h3>Table Param</h3>
           <table class="table">
@@ -188,6 +213,40 @@ export default {
   <template #tbody="scope">
     <zd-table-body prop='name' :data="scope.row" />
     <zd-table-body prop='name2' :data="scope.row" />
+  </template>
+</zd-table>`,
+      datajggdl: `<zd-table border striped :data='data'>
+  <zd-table-head label='固定left' fixed="left" />
+  <zd-table-head label='固定left' fixed="left" />
+  <zd-table-head label='字段2' v-for="(item,index) in 20" :key="index" />
+  <zd-table-head label='固定right' fixed="right" />
+  <zd-table-head label='固定right' fixed="right" />
+  <!-- 主体 -->
+  <template #tbody="scope">
+    <zd-table-body prop='name' fixed="left" :data="scope.row" />
+    <zd-table-body prop='name' fixed="left" :data="scope.row" />
+    <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 20" :key="index" />
+    <zd-table-body prop='name' fixed="right" :data="scope.row" />
+    <zd-table-body prop='name' fixed="right" :data="scope.row" />
+  </template>
+</zd-table>`,
+      datajggdl1: `<zd-table border striped :data='data'>
+  <zd-table-head label='固定left' fixed="left" />
+  <zd-table-head label='固定left' fixed="left" />
+  <zd-table-head label='字段1' v-for="(item,index) in 4" :key="index+'a'" />
+  <zd-table-head label='我也是固定' fixed="left" />
+  <zd-table-head label='字段2' v-for="(item,index) in 20" :key="index" />
+  <zd-table-head label='固定right' fixed="right" />
+  <zd-table-head label='固定right' fixed="right" />
+  <!-- 主体 -->
+  <template #tbody="scope">
+    <zd-table-body prop='name' fixed="left" :data="scope.row" />
+    <zd-table-body prop='name' fixed="left" :data="scope.row" />
+    <zd-table-body prop='name' :data="scope.row" v-for="(item,index) in 4" :key="index+'a'" />
+    <zd-table-body prop='name' fixed="left" :data="scope.row" />
+    <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 20" :key="index" />
+    <zd-table-body prop='name' fixed="right" :data="scope.row" />
+    <zd-table-body prop='name' fixed="right" :data="scope.row" />
   </template>
 </zd-table>`,
       loading: true
