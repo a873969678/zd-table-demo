@@ -3,7 +3,6 @@ export function setFixedWidthTh (className, fixName) {
   let fixClassName = fixName === 'left' ? 'fixed-left-th' : 'fixed-right-th'
   // 设置多个固定th的距离
   let dom = document.getElementsByClassName(className) // 获取对应的类名
-  console.log(dom)
   if (dom.length > 0) {
     let fixName = dom[0].getElementsByClassName(fixClassName)
     let num = 0
