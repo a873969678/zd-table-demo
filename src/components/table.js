@@ -6,14 +6,27 @@ export function setFixedWidthTh (className, fixName) {
   if (dom.length > 0) {
     let fixName = dom[0].getElementsByClassName(fixClassName)
     let num = 0
-    for (let i = 0; i < fixName.length; i++) {
-      // 后面为前面宽度之和
-      if (i > 0) {
-        // console.log(num)
-        fixName[i].style.left = num - 1 + 'px'
-        num += fixName[i].clientWidth
-      } else {
-        num = fixName[i].clientWidth
+    if (fixName === 'left') {
+      for (let i = 0; i < fixName.length; i++) {
+        // 后面为前面宽度之和
+        if (i > 0) {
+          // console.log(num)
+          fixName[i].style.left = num - 1 + 'px'
+          num += fixName[i].clientWidth
+        } else {
+          num = fixName[i].clientWidth
+        }
+      }
+    } else {
+      for (let i = fixName.length - 1; i >= 0; i--) {
+        // 后面为前面宽度之和
+        if (i > 0) {
+          // console.log(num)
+          fixName[i].style.right = num - 1 + 'px'
+          num += fixName[i].clientWidth
+        } else {
+          num = fixName[i].clientWidth
+        }
       }
     }
   }
