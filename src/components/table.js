@@ -65,3 +65,20 @@ export function setFixedWidthTd (className, fixValue) {
     }
   }
 }
+
+export function getTextLength (value) {
+  // 计算字体长度
+  // 中文、中文标点、全角字符按1长度，英文、英文符号、数字按0.5长度计算
+  if (value) {
+    value = String(value)
+    let cnReg = /([\u4e00-\u9fa5]|[\u3000-\u303F]|[\uFF00-\uFF60])/g
+    let mat = value.match(cnReg)
+    if (mat) {
+      return (mat.length + (value.length - mat.length) * 0.5)
+    } else {
+      return (value.length * 0.5)
+    }
+  } else {
+    return 0
+  }
+}

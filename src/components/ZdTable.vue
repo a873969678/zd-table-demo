@@ -112,7 +112,7 @@ export default {
   table {
     border-collapse: collapse;
     overflow: auto;
-    // table-layout: fixed;
+    table-layout: fixed;
     min-width: 100%;
     th,
     td {

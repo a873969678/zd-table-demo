@@ -2,7 +2,8 @@
   <th
     :class="{'fixed-left-th':fixed==='left','fixed-right-th':fixed==='right'}"
   >
-    {{ label }}
+  <!-- style="min-width: 250px;" -->
+    <span>{{ label }}</span>
   </th>
 </template>
 
