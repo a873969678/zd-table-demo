@@ -62,14 +62,20 @@
               <!-- 表头 -->
               <zd-table-head label='固定left' fixed="left" />
               <zd-table-head label='固定left' fixed="left" />
-              <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
-              <!-- <zd-table-head label='固定right' fixed="right" /> -->
+              <zd-table-head label='字段1' v-for="(item,index) in 4" :key="index+'a'" />
+              <zd-table-head label='我也是固定' fixed="left" />
+              <zd-table-head label='字段2' v-for="(item,index) in 20" :key="index" />
+              <zd-table-head label='固定right' fixed="right" />
+              <zd-table-head label='固定right' fixed="right" />
               <!-- 主体 -->
               <template #tbody="scope">
                 <zd-table-body prop='name' fixed="left" :data="scope.row" />
                 <zd-table-body prop='name' fixed="left" :data="scope.row" />
-                <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
-                <!-- <zd-table-body prop='name' fixed="right" :data="scope.row" /> -->
+                <zd-table-body prop='name' :data="scope.row" v-for="(item,index) in 4" :key="index+'a'" />
+                <zd-table-body prop='name' fixed="left" :data="scope.row" />
+                <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 20" :key="index" />
+                <zd-table-body prop='name' fixed="right" :data="scope.row" />
+                <zd-table-body prop='name' fixed="right" :data="scope.row" />
             </template>
             </zd-table>
           </div>
