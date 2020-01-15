@@ -11,6 +11,10 @@
         <p><a href="#固定表头">固定表头</a></p>
         <p><a href="#自定义宽度">自定义宽度</a></p>
         <p><a href="#超出省略">超出省略</a></p>
+        <p><a href="#合计">合计</a></p>
+        <h3>方法</h3>
+        <p><a href="#获取某一行数据">获取某一行数据</a></p>
+        <p><a href="#设置某一行样式">设置某一行样式</a></p>
         <h3>链接</h3>
         <p><a href="https://github.com/a873969678/zd-table-demo">git仓库地址</a></p>
         <!-- <h3>链接</h3> -->
@@ -113,7 +117,7 @@
             {{datajggdl1}}
           </p>
 
-          <h3 id="固定表头">固定表头</h3>
+          <h3 id="流体高度">流体高度</h3>
           <p class="tip">传入height即可固定表头，height为max-height</p>
           <div>
             <zd-table border striped :data='data1' height='300px'>
@@ -174,6 +178,73 @@
           </div>
           <p class="hljs">
             {{datatooltip}}
+          </p>
+
+          <h3 id="合计">合计</h3>
+          <p class="tip">使用插槽sumAppend与sumPrepend可以设置合计列位置</p>
+          <div>
+            <zd-table border striped :data='data1' height='300px'>
+              <!-- 表头 -->
+              <zd-table-head label='字段1' />
+              <zd-table-head label='字段2' v-for="(item,index) in 10" :key="index" />
+
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body prop='name' :data="scope.row" />
+                <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 10" :key="index" />
+              </template>
+
+              <template #sumAppend>
+                <zd-table-body>合计</zd-table-body>
+                <zd-table-body v-for="(item,index) in 10" :key="index"> 0 </zd-table-body>
+              </template>
+
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{datam1}}
+          </p>
+
+          <h3 id="获取某一行数据">获取获取某一行数据</h3>
+          <p class="tip">设置row-click点击方法获取某一行数据，设置cell-mouse-enter与cell-mouse-leave获取移入移出某一行数据</p>
+          <div>
+            <zd-table border striped :data='data' :row-click='rowClick' :cell-mouse-enter="cellMouseEnter" :cell-mouse-leave="cellMouseLeave">
+              <!-- 表头 -->
+              <zd-table-head label='序号' />
+              <zd-table-head label='字段1' />
+              <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
+
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body> {{scope.$index}} </zd-table-body>
+                <zd-table-body prop='name' :data="scope.row" />
+                <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
+              </template>
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{datam1}}
+          </p>
+
+          <h3 id="设置某一行样式">设置某一行样式</h3>
+          <p class="tip">指定 Table 组件的 row-class-name 属性来为 Table 中的某一行添加 class</p>
+          <div>
+            <zd-table border striped :data='data' :row-class-name='rowClassName'>
+              <!-- 表头 -->
+              <zd-table-head label='序号' />
+              <zd-table-head label='字段1' />
+              <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
+
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body> {{scope.$index}} </zd-table-body>
+                <zd-table-body prop='name' :data="scope.row" />
+                <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
+              </template>
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{datam2}}
           </p>
 
           <h3>Table Param</h3>
@@ -241,6 +312,24 @@
               <td>{{item.g}}</td>
             </tr>
           </table>
+
+          <h3>table Methods</h3>
+          <table class="table">
+            <tr>
+              <th>方法名</th>
+              <th>说明</th>
+              <th>类型</th>
+              <th>回调参数</th>
+              <th>参数说明</th>
+            </tr>
+            <tr v-for="(item,index) in tableMethods" :key="index">
+              <td>{{item.a}}</td>
+              <td>{{item.b}}</td>
+              <td>{{item.c}}</td>
+              <td>{{item.d}}</td>
+              <td>{{item.e}}</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
@@ -287,6 +376,31 @@ export default {
         f: '--',
         g: '--'
       }],
+      tableMethods: [{
+        a: 'rowClick',
+        b: '点击某一行触发',
+        c: 'Function',
+        d: 'rowIndex，rowData，event',
+        e: 'rowIndex下标，rowData 整行数据，event节点信息'
+      }, {
+        a: 'cellMouseEnter',
+        b: '鼠标进入某一行触发',
+        c: 'Function',
+        d: 'rowIndex，rowData，event',
+        e: 'rowIndex下标，rowData 整行数据，event节点信息'
+      }, {
+        a: 'cellMouseLeave',
+        b: '鼠标离开某一行触发',
+        c: 'Function',
+        d: 'rowIndex，rowData，event',
+        e: 'rowIndex下标，rowData 整行数据，event节点信息'
+      }, {
+        a: 'rowClassName',
+        b: '设置某一行样式',
+        c: 'Function',
+        d: 'rowIndex，rowData',
+        e: 'rowIndex下标，rowData 整行数据'
+      }],
       paramTableTh: [{
         a: 'fixed',
         b: '固定列,向左固定或者向右固定',
@@ -301,6 +415,14 @@ export default {
         c: 'String',
         d: 'px/百分比',
         e: '--',
+        f: '--',
+        g: '--'
+      }, {
+        a: 'show-overflow-tooltip',
+        b: '超出省略，需要配合width或者min-width',
+        c: 'Boolean',
+        d: 'true/false',
+        e: 'false',
         f: '--',
         g: '--'
       }],
@@ -421,6 +543,46 @@ export default {
     <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
   </template>
 </zd-table>`,
+      datam1: `<zd-table border striped :data='data' :row-click='rowClick' :cell-mouse-enter="cellMouseEnter" :cell-mouse-leave="cellMouseLeave" >
+  <!-- 表头 -->
+  <zd-table-head label='序号' />
+  <zd-table-head label='字段1' />
+  <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
+  <!-- 主体 -->
+  <template #tbody="scope">
+    <zd-table-body> {{scope.$index}} </zd-table-body>
+    <zd-table-body prop='name' :data="scope.row" />
+    <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
+  </template>
+</zd-table>
+
+rowClick (rowIndex, rowData, event) {
+  console.log(rowIndex, rowData, event)
+},
+cellMouseEnter (rowIndex, rowData, event) {
+  console.log(rowIndex, rowData, event)
+},
+cellMouseLeave (rowIndex, rowData, event) {
+  console.log(rowIndex, rowData, event)
+}`,
+      datam2: `<zd-table border striped :data='data' :row-class-name='rowClassName' >
+  <!-- 表头 -->
+  <zd-table-head label='序号' />
+  <zd-table-head label='字段1' />
+  <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
+  <!-- 主体 -->
+  <template #tbody="scope">
+    <zd-table-body> {{scope.$index}} </zd-table-body>
+    <zd-table-body prop='name' :data="scope.row" />
+    <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
+  </template>
+</zd-table>
+
+rowClassName (rowIndex, rowData) {
+  if (rowIndex === 2) {
+    return 'light'
+  }
+}`,
       loading: true,
       data1: []
     }
@@ -442,15 +604,34 @@ export default {
     //     { name: 'test6', name2: 'test8' }
     //   ]
     // }, 2000)
+  },
+  methods: {
+    rowClick (rowIndex, rowData, event) {
+      console.log(rowIndex, rowData, event)
+    },
+    cellMouseEnter (rowIndex, rowData, event) {
+      console.log(rowIndex, rowData, event)
+    },
+    cellMouseLeave (rowIndex, rowData, event) {
+      console.log(rowIndex, rowData, event)
+    },
+    rowClassName (rowIndex, rowData) {
+      if (rowIndex === 2) {
+        return 'light'
+      }
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .home{
   width:80%;
   position: relative;
   margin: 0 auto;
+}
+.light{
+  background: oldlace!important;
 }
   body{
     width:80%;

@@ -3,13 +3,21 @@
     <!-- zd-table-striped 间隔色 zd-table-border 边框 -->
     <table :class="{'zd-table-wrapper':true,'zd-table-striped':striped,'zd-table-border':border}">
       <thead>
-        <tr class="zd-table-cloumn-tr">
+        <tr class="zd-table-cloumn-tr zd-table-cloumn-tr-th">
           <slot />
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item,index) in data" :key="index" class="zd-table-cloumn-tr">
-          <slot name="tbody" :row="item" />
+        <tr>
+          <!-- 头部合计 -->
+          <slot name="sumPrepend" />
+        </tr>
+        <tr @click="rowClick(index, item, $event)" @mouseenter="cellMouseEnter(index, item, $event)" @mouseleave="cellMouseLeave(index, item, $event)" v-for="(item, index) in data" :key="index" :class="{'zd-table-cloumn-tr':true, [rowClassName(index, item) || '']:true}">
+          <slot name="tbody" :row="item" :$index="index" />
+        </tr>
+        <tr class="sum-cloumn sum-cloumn-append">
+          <!-- 尾部合计 -->
+          <slot name="sumAppend" />
         </tr>
       </tbody>
       <tbody v-if="data.length === 0">
@@ -40,6 +48,22 @@ export default {
     border: {
       type: Boolean,
       default: false // 是否边框
+    },
+    rowClick: {
+      type: Function, // 点击某一行
+      default: () => {}
+    },
+    cellMouseEnter: {
+      type: Function, // 鼠标移入
+      default: () => {}
+    },
+    cellMouseLeave: {
+      type: Function, // 鼠标移出
+      default: () => {}
+    },
+    rowClassName: {
+      type: Function, // 设置每一行的样式
+      default: () => { return '' }
     }
   },
   data () {
@@ -113,6 +137,7 @@ export default {
   position: relative;
   overflow: auto;
   // max-height: 300px;
+  border-bottom: 1px solid #EBEEF5;
   table {
     border-collapse: collapse;
     overflow: auto;
@@ -120,6 +145,7 @@ export default {
     min-width: 100%;
     th,
     td {
+      background: inherit;
       min-width: 50px;
       padding: 5px;
       text-align: center;
@@ -137,7 +163,6 @@ export default {
     td:last-child {
       border-right: 0;
     }
-
     tr {
       border-left: 0;
       border-bottom: 1px solid #EBEEF5;
@@ -148,13 +173,15 @@ export default {
     thead {
       color: #909399;
       font-weight: 500;
+      tr{
+        background-color: rgb(245, 247, 250);
+      }
       tr:first-child{
         th{
           border-top: 0;
         }
       }
       th {
-        background-color: rgb(245, 247, 250);
         color: #909399;
         position: sticky;
         font-size: 13px;
@@ -173,10 +200,21 @@ export default {
     }
 
     tbody {
-      td {
+      tr{
         background: #fff;
+      }
+      td {
         color:#606266;
         font-size: 12px;
+      }
+      .sum-cloumn{
+        background: oldlace!important;
+      }
+      .sum-cloumn-append td {
+        position: sticky;
+        position: -webkit-sticky;
+        bottom: 0px;
+        z-index: 5;
       }
     }
 
@@ -216,7 +254,7 @@ export default {
   .zd-table-striped{
     // 间隔色
     tbody{
-      tr:nth-child(even) td{
+      tr:nth-child(odd){
         background: rgb(245,247,250);
       }
     }

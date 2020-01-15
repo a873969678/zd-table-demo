@@ -1,8 +1,8 @@
 <template>
   <td :class="{'fixed-left-td':fixed==='left','fixed-right-td':fixed==='right','white-space-nowrap':!minWidth && !width}"
-  :style="{'min-width':minWidth || width}">
-      <el-tooltip :content="data[prop]" :disabled="!(showOverflowTooltip && widthValue && getTextLength(data[prop]) * tdFontSize > widthValue)" placement="top"  effect="light">
-         <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':minWidth || width}">{{data[prop]}}</span>
+  :style="{'min-width':minWidth || width, 'width':minWidth || width}">
+      <el-tooltip :content="data ? data[prop]+'' || '' : ''" :disabled="!(showOverflowTooltip && widthValue && getTextLength(data ? data[prop] || '' : '') * tdFontSize > widthValue)" placement="top"  effect="light">
+         <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':minWidth || width}"><slot>{{data ? data[prop] || '' : ''}}</slot></span>
       </el-tooltip>
   </td>
 </template>

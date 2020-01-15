@@ -1,10 +1,10 @@
 <template>
   <th
     :class="{'fixed-left-th':fixed==='left','fixed-right-th':fixed==='right'}"
-    :style="{'min-width':minWidth || width}"
+    :style="{'min-width':minWidth || width, 'width':minWidth || width}"
   >
     <el-tooltip :content="label" :disabled="!(showOverflowTooltip && widthValue && getTextLength(label) * tdFontSize > widthValue)" placement="top"  effect="light">
-      <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':minWidth || width}">{{label}}</span>
+      <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':minWidth || width}"> <slot>{{label}}</slot> </span>
     </el-tooltip>
   </th>
 </template>
