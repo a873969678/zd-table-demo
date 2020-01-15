@@ -12,7 +12,7 @@
           <!-- 头部合计 -->
           <slot name="sumPrepend" />
         </tr>
-        <tr @click="rowClick(index, item, $event)" @mouseenter="cellMouseEnter(index, item, $event)" @mouseleave="cellMouseLeave(index, item, $event)" v-for="(item, index) in data" :key="index" :class="{'zd-table-cloumn-tr':true, [rowClassName(index, item) || '']:true}">
+        <tr v-for="(item, index) in data" :key="index" :class="{'zd-table-cloumn-tr':true, [rowClassName(index, item) || '']:true}" @click="rowClick(index, item, $event)" @mouseenter="cellMouseEnter(index, item, $event)" @mouseleave="cellMouseLeave(index, item, $event)">
           <slot name="tbody" :row="item" :$index="index" />
         </tr>
         <tr class="sum-cloumn sum-cloumn-append">
@@ -64,30 +64,36 @@ export default {
     rowClassName: {
       type: Function, // 设置每一行的样式
       default: () => { return '' }
+    },
+    fixed: {
+      type: Boolean, // 使用固定功能
+      default: () => false
     }
   },
-  data () {
+  data() {
     return {
       className: (new Date().getTime()).toString() // 独一无二类名，防止一个页面多个table冲突
     }
   },
   watch: {
-    data (newValue, oldValue) {
+    data(newValue, oldValue) {
       this.data = newValue
     }
   },
-  mounted () {
+  mounted() {
     const domTable = document.getElementsByClassName(this.className)[0]
     // 首次判断右边是否固定并且有滚动条
-    if (domTable.clientWidth !== domTable.scrollWidth - domTable.scrollLeft) {
-      setTimeout(() => {
-        this.addOrRemoveClass(domTable, 'add', 'right')
-      }, 200)
+    if (this.fixed) {
+      if (domTable.clientWidth !== domTable.scrollWidth - domTable.scrollLeft) {
+        setTimeout(() => {
+          this.addOrRemoveClass(domTable, 'add', 'right')
+        }, 200)
+      }
+      domTable.addEventListener('scroll', this.getScroll)
     }
-    domTable.addEventListener('scroll', this.getScroll)
   },
   methods: {
-    getScroll (e) {
+    getScroll(e) {
       // 滚动条事件 固定列添加阴影效果
       if (e.target.scrollLeft > 0) {
         this.addOrRemoveClass(e.target, 'add')
@@ -102,7 +108,7 @@ export default {
         this.addOrRemoveClass(e.target, 'add', 'right')
       }
     },
-    addOrRemoveClass (e, type, fixed = 'left') {
+    addOrRemoveClass(e, type, fixed = 'left') {
       // 删除或者添加节点
       const tr = e.getElementsByClassName('zd-table-cloumn-tr')
       for (let i = 0; i < tr.length; i++) {
@@ -118,7 +124,6 @@ export default {
         }
         if (fixedLeftTd.length > 0) {
           const num = fixed === 'left' ? fixedLeftTd.length - 1 : 0
-
           if (type === 'add') {
             fixedLeftTd[num].classList.add('fixed-' + fixed + '-shadow')
           } else if (type === 'remove') {

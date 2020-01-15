@@ -1,4 +1,4 @@
-export function setFixedWidthTh (className, fixValue) {
+export function setFixedWidthTh(className, fixValue) {
   // table类名 需要计算固定的类名
   const fixClassName = fixValue === 'left' ? 'fixed-left-th' : 'fixed-right-th'
   // 设置多个固定th的距离
@@ -32,7 +32,7 @@ export function setFixedWidthTh (className, fixValue) {
   }
 }
 
-export function setFixedWidthTd (className, fixValue) {
+export function setFixedWidthTd(className, fixValue) {
   // table类名 需要计算固定的类名
   const fixClassName = fixValue === 'left' ? 'fixed-left-td' : 'fixed-right-td'
   // 设置多个固定td的距离
@@ -66,13 +66,13 @@ export function setFixedWidthTd (className, fixValue) {
   }
 }
 
-export function getTextLength (value) {
+export function getTextLength(value) {
   // 计算字体长度 用来判断什么时候超出省略
   // 中文、中文标点、全角字符按1长度，英文、英文符号、数字按0.5长度计算
   if (value) {
     value = String(value)
-    let cnReg = /([\u4e00-\u9fa5]|[\u3000-\u303F]|[\uFF00-\uFF60])/g
-    let mat = value.match(cnReg)
+    const cnReg = /([\u4e00-\u9fa5]|[\u3000-\u303F]|[\uFF00-\uFF60])/g
+    const mat = value.match(cnReg)
     if (mat) {
       return (mat.length + (value.length - mat.length) * 0.5)
     } else {
