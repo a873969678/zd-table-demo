@@ -6,17 +6,17 @@
         <tr class="zd-table-cloumn-tr zd-table-cloumn-tr-th">
           <slot />
         </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <!-- 头部合计 -->
+        <tr class="sum-cloumn sum-cloumn-prepend">
+          <!-- 尾部合计 -->
           <slot name="sumPrepend" />
         </tr>
+      </thead>
+      <tbody>
         <tr v-for="(item, index) in data" :key="index" :class="{'zd-table-cloumn-tr':true, [rowClassName(index, item) || '']:true}" @click="rowClick(index, item, $event)" @mouseenter="cellMouseEnter(index, item, $event)" @mouseleave="cellMouseLeave(index, item, $event)">
           <slot name="tbody" :row="item" :$index="index" />
         </tr>
         <tr class="sum-cloumn sum-cloumn-append">
-          <!-- 尾部合计 -->
+          <!-- 头部合计 -->
           <slot name="sumAppend" />
         </tr>
       </tbody>
@@ -145,7 +145,6 @@ export default {
   border-bottom: 1px solid #EBEEF5;
   table {
     border-collapse: collapse;
-    overflow: auto;
     position: relative;
     min-width: 100%;
     th,
@@ -184,6 +183,7 @@ export default {
       tr:first-child{
         th{
           border-top: 0;
+          top: 0px;
         }
       }
       th {
@@ -191,7 +191,6 @@ export default {
         position: sticky;
         font-size: 13px;
         position: -webkit-sticky;
-        top: 0px;
         z-index: 2;
 
         .cell {
@@ -217,10 +216,19 @@ export default {
     .sum-cloumn{
       background: oldlace!important;
     }
-    .sum-cloumn-append td {
+    .sum-cloumn-prepend td{
+      position: sticky;
+      position: -webkit-sticky;
+      top: 37px;
+      font-size: 12px;
+      z-index: 5;
+    }
+
+    .sum-cloumn-append td{
       position: sticky;
       position: -webkit-sticky;
       bottom: 0px;
+      font-size: 12px;
       z-index: 5;
     }
 

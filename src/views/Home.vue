@@ -117,7 +117,7 @@
             {{ datajggdl1 }}
           </p>
 
-          <h3 id="流体高度">流体高度</h3>
+          <h3 id="固定高度">固定高度</h3>
           <p class="tip">传入height即可固定表头，height为max-height</p>
           <div>
             <zd-table border striped :data="data1" height="300px">
@@ -181,7 +181,7 @@
           </p>
 
           <h3 id="合计">合计</h3>
-          <p class="tip">使用插槽sumAppend与sumPrepend可以设置合计列位置</p>
+          <p class="tip">使用插槽sumAppend与sumPrepend可以设置合计列位置，移动端ios尾部合集不能正常固定，如果移动端需要，请使用头部合计</p>
           <div>
             <zd-table border striped :data="data1" height="300px">
               <!-- 表头 -->
@@ -193,9 +193,12 @@
                 <zd-table-body prop="name" :data="scope.row" />
                 <zd-table-body v-for="(item,index) in 10" :key="index" prop="name2" :data="scope.row" />
               </template>
-
+              <template #sumPrepend>
+                <zd-table-body>合计头部</zd-table-body>
+                <zd-table-body v-for="(item,index) in 10" :key="index"> 1 </zd-table-body>
+              </template>
               <template #sumAppend>
-                <zd-table-body>合计</zd-table-body>
+                <zd-table-body>合计尾部</zd-table-body>
                 <zd-table-body v-for="(item,index) in 10" :key="index"> 1 </zd-table-body>
               </template>
 
