@@ -183,23 +183,23 @@
           <h3 id="合计">合计</h3>
           <p class="tip">使用插槽sumAppend与sumPrepend可以设置合计列位置，移动端ios尾部合集不能正常固定，如果移动端需要，请使用头部合计</p>
           <div>
-            <zd-table border striped :data="data1" height="300px">
+            <zd-table border striped :data="data1" height="300px" fixed>
               <!-- 表头 -->
-              <zd-table-head label="字段1" />
-              <zd-table-head v-for="(item,index) in 10" :key="index" label="字段2" />
+              <zd-table-head label="字段1" fixed="left" />
+              <zd-table-head v-for="(item,index) in 50" :key="index" label="字段2" />
 
               <!-- 主体 -->
               <template #tbody="scope">
-                <zd-table-body prop="name" :data="scope.row" />
-                <zd-table-body v-for="(item,index) in 10" :key="index" prop="name2" :data="scope.row" />
+                <zd-table-body prop="name" fixed="left" :data="scope.row" />
+                <zd-table-body v-for="(item,index) in 50" :key="index" prop="name2" :data="scope.row" />
               </template>
               <template #sumPrepend>
-                <zd-table-body>合计头部</zd-table-body>
-                <zd-table-body v-for="(item,index) in 10" :key="index"> 1 </zd-table-body>
+                <zd-table-body fixed="left">合计头部</zd-table-body>
+                <zd-table-body v-for="(item,index) in 50" :key="index"> 1 </zd-table-body>
               </template>
               <template #sumAppend>
-                <zd-table-body>合计尾部</zd-table-body>
-                <zd-table-body v-for="(item,index) in 10" :key="index"> 1 </zd-table-body>
+                <zd-table-body fixed="left">合计尾部</zd-table-body>
+                <zd-table-body v-for="(item,index) in 50" :key="index"> 1 </zd-table-body>
               </template>
 
             </zd-table>

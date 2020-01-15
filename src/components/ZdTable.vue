@@ -6,7 +6,7 @@
         <tr class="zd-table-cloumn-tr zd-table-cloumn-tr-th">
           <slot />
         </tr>
-        <tr class="sum-cloumn sum-cloumn-prepend">
+        <tr class="zd-table-cloumn-tr sum-cloumn sum-cloumn-prepend">
           <!-- 尾部合计 -->
           <slot name="sumPrepend" />
         </tr>
@@ -15,7 +15,7 @@
         <tr v-for="(item, index) in data" :key="index" :class="{'zd-table-cloumn-tr':true, [rowClassName(index, item) || '']:true}" @click="rowClick(index, item, $event)" @mouseenter="cellMouseEnter(index, item, $event)" @mouseleave="cellMouseLeave(index, item, $event)">
           <slot name="tbody" :row="item" :$index="index" />
         </tr>
-        <tr class="sum-cloumn sum-cloumn-append">
+        <tr class="zd-table-cloumn-tr sum-cloumn sum-cloumn-append">
           <!-- 头部合计 -->
           <slot name="sumAppend" />
         </tr>
@@ -221,7 +221,7 @@ export default {
       position: -webkit-sticky;
       top: 37px;
       font-size: 12px;
-      z-index: 5;
+      z-index: 2;
     }
 
     .sum-cloumn-append td{
@@ -241,12 +241,18 @@ export default {
 
     .fixed-left-td,
     .fixed-right-td {
-      z-index: 3
+      z-index: 3!important;
     }
 
     .fixed-left-th,
     .fixed-right-th {
-      z-index: 4
+      z-index: 4!important;
+    }
+    .sum-cloumn-prepend .fixed-left-td{
+      z-index: 4!important;
+    }
+    .sum-cloumn-append .fixed-left-td{
+      z-index: 9!important;
     }
 
     .fixed-right-td,
