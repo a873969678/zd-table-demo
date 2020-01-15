@@ -146,7 +146,7 @@ export default {
   table {
     border-collapse: collapse;
     overflow: auto;
-    table-layout: fixed;
+    position: relative;
     min-width: 100%;
     th,
     td {
@@ -205,6 +205,7 @@ export default {
     }
 
     tbody {
+      position: relative;
       tr{
         background: #fff;
       }
@@ -212,15 +213,15 @@ export default {
         color:#606266;
         font-size: 12px;
       }
-      .sum-cloumn{
-        background: oldlace!important;
-      }
-      .sum-cloumn-append td {
-        position: sticky;
-        position: -webkit-sticky;
-        bottom: 0px;
-        z-index: 5;
-      }
+    }
+    .sum-cloumn{
+      background: oldlace!important;
+    }
+    .sum-cloumn-append td {
+      position: sticky;
+      position: -webkit-sticky;
+      bottom: 0px;
+      z-index: 5;
     }
 
     .fixed-left-td,
@@ -278,5 +279,12 @@ export default {
   border-top:1px solid #EBEEF5;
   border-right:1px solid #EBEEF5;
 }
+
+// @media (max-height: 1000px) and (max-width: 1000px) {
+//   // 横屏微调
+//   .sum-cloumn-append td {
+//       bottom: 50px;
+//   }
+// }
 
 </style>
