@@ -1,6 +1,7 @@
 <template>
   <th
     :class="{'fixed-left-th':fixed==='left','fixed-right-th':fixed==='right'}"
+    :style="{'min-width':minWidth || width}"
   >
   <!-- style="min-width: 250px;" -->
     <span>{{ label }}</span>
@@ -13,18 +14,28 @@ export default {
   name: 'ZdTableHead',
   props: {
     label: {
-      type: String,
+      type: String, // 表头名称
+      default: ''
+    },
+    minWidth: {
+      type: String, // 表头最小宽度
+      default: ''
+    },
+    width: {
+      type: String, // 表头宽度
       default: ''
     },
     fixed: {
       type: String,
-      default: () => ''
+      default: () => '' // 表头是否固定
     }
   },
   data () {
     return {
       data: [] // 列表数据
     }
+  },
+  created () {
   },
   watch: {
     '$parent.data' (newValue, oldValue) {

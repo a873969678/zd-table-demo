@@ -1,29 +1,46 @@
 <template>
-  <td :class="{'fixed-left-td':fixed==='left','fixed-right-td':fixed==='right'}">
-    {{ data[prop] }}
+  <td :class="{'fixed-left-td':fixed==='left','fixed-right-td':fixed==='right','white-space-nowrap':!minWidth && !width}"
+  :style="{'min-width':minWidth || width}">
+      <el-tooltip :content="data[prop]" :disabled="!(showOverflowTooltip && widthValue && getTextLength(data[prop]) * tdFontSize > widthValue)" placement="top"  effect="light">
+         <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':minWidth || width}">{{data[prop]}}</span>
+      </el-tooltip>
   </td>
 </template>
 
 <script>
-import { setFixedWidthTd } from './table'
+import { setFixedWidthTd, getTextLength } from './table'
 export default {
   name: 'ZdTableBody',
   props: {
     prop: {
-      type: String,
+      type: String, // 数据key
       default: ''
     },
     data: {
       type: Object,
-      default: () => {}
+      default: () => {} // 指定行的数据
+    },
+    minWidth: {
+      type: String, // 表头最小宽度
+      default: ''
+    },
+    width: {
+      type: String, // 表头宽度
+      default: ''
     },
     fixed: {
       type: String,
-      default: () => ''
+      default: () => '' // td固定
+    },
+    showOverflowTooltip: {
+      type: Boolean,
+      default: () => false // 超出省略
     }
   },
   data () {
     return {
+      tdFontSize: 12, // td 字体大小
+      widthValue: ''
     }
   },
   watch: {
@@ -40,11 +57,19 @@ export default {
     }
   },
   mounted () {
+    this.widthValue = (this.minWidth || this.width).replace('px', '')
     if (this.fixed) {
       setTimeout(() => {
         setFixedWidthTd(this.$parent.className, this.fixed) // 设置多个固定列的距离
       }, 200)
     }
+    if (document.getElementsByTagName('td').length > 0) {
+      // 用来判断什么时候超出省略
+      this.tdFontSize = window.getComputedStyle(document.getElementsByTagName('td')[0]).fontSize.replace('px', '')
+    }
+  },
+  methods: {
+    getTextLength
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'zd-table':true, [className]:true ,'zd-table-border-div': border}">
+  <div :class="{'zd-table':true, [className]:true ,'zd-table-border-div': border}" :style="{'max-height':height}">
     <!-- zd-table-striped 间隔色 zd-table-border 边框 -->
     <table :class="{'zd-table-wrapper':true,'zd-table-striped':striped,'zd-table-border':border}">
       <thead>
@@ -28,6 +28,10 @@ export default {
     data: {
       type: Array,
       default: () => []
+    },
+    height: {
+      type: String,
+      default: () => ''
     },
     striped: {
       type: Boolean,
@@ -108,7 +112,7 @@ export default {
 .zd-table {
   position: relative;
   overflow: auto;
-  max-height: 300px;
+  // max-height: 300px;
   table {
     border-collapse: collapse;
     overflow: auto;
@@ -121,7 +125,7 @@ export default {
       text-align: center;
       padding: 10px 10px;
     }
-    td{
+    .white-space-nowrap{
       white-space: nowrap;
     }
 
@@ -221,6 +225,9 @@ export default {
     th,td{
       border: 1px solid #EBEEF5;
     }
+  }
+  .showOverflowTooltip{
+    display:inline-block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
 }
 .zd-table-border-div{

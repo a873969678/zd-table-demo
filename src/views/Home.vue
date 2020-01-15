@@ -8,6 +8,9 @@
         <p><a href="#斑马线与边框">斑马线与边框</a></p>
         <p><a href="#固定列">固定列</a></p>
         <p><a href="#间隔固定列">间隔固定列</a></p>
+        <p><a href="#固定表头">固定表头</a></p>
+        <p><a href="#自定义宽度">自定义宽度</a></p>
+        <p><a href="#超出省略">超出省略</a></p>
         <!-- <h3>链接</h3> -->
         <!-- <a><a href="https://github.com/a873969678/linshengji-ui">git仓库地址</a></p> -->
       </div>
@@ -81,7 +84,7 @@
           </p>
 
           <h3 id="间隔固定列">间隔固定列</h3>
-          <p class="tip">在需要的地方加上fixed固定，拖动到制定位置时会自动合并</p>
+          <p class="tip">在需要的地方加上fixed固定，拖动到指定位置时会自动合并</p>
           <div>
             <zd-table border striped :data='data'>
               <!-- 表头 -->
@@ -108,6 +111,67 @@
             {{datajggdl1}}
           </p>
 
+          <h3 id="固定表头">固定表头</h3>
+          <p class="tip">传入height即可固定表头，height为max-height</p>
+          <div>
+            <zd-table border striped :data='data1' height='300px'>
+              <!-- 表头 -->
+              <zd-table-head label='字段1' />
+              <zd-table-head label='字段2' />
+
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body prop='name' :data="scope.row" />
+                <zd-table-body prop='name2' :data="scope.row" />
+            </template>
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{datafixbiaotou}}
+          </p>
+
+          <h3 id="自定义宽度">自定义宽度</h3>
+          <p class="tip">zd-table-head或者zd-table-body传入width，实际为min-width,内容太少时会自动撑开，内容多时会变成max-width，多余会超出省略，th与td同时设置时，宽度大的会覆盖小的</p>
+          <div>
+            <zd-table border striped :data='data'>
+              <!-- 表头 -->
+              <zd-table-head label='字段1' />
+              <zd-table-head label='这个是比较长的宽度'/>
+              <zd-table-head label='字段K'/>
+              <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body prop='name' :data="scope.row" />
+                <zd-table-body prop='name3' :data="scope.row" width="200px" />
+                <zd-table-body prop='name4' :data="scope.row" />
+                <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
+              </template>
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{datawidth}}
+          </p>
+
+          <h3 id="超出省略">超出省略</h3>
+          <p class="tip">zd-table-head或者zd-table使用show-overflow-tooltip，必须设置width或者min-width，会超出省略并且显示悬浮内容，需要使用el-tooltip</p>
+          <div>
+            <zd-table border striped :data='data'>
+              <!-- 表头 -->
+              <zd-table-head label='字段1' />
+              <zd-table-head label='这个是比较长的宽度'/>
+              <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body prop='name' :data="scope.row" />
+                <zd-table-body prop='name5' :data="scope.row" width="200px" show-overflow-tooltip />
+                <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
+              </template>
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{datawidth}}
+          </p>
+
           <h3>Table Param</h3>
           <table class="table">
             <tr>
@@ -130,7 +194,7 @@
             </tr>
           </table>
 
-          <h3>zd-table-head Param</h3>
+          <h3>table-head Param</h3>
           <table class="table">
             <tr>
               <th>参数</th>
@@ -142,6 +206,28 @@
               <th>是否必传</th>
             </tr>
             <tr v-for="(item,index) in paramTableTh" :key="index">
+              <td>{{item.a}}</td>
+              <td>{{item.b}}</td>
+              <td>{{item.c}}</td>
+              <td>{{item.d}}</td>
+              <td>{{item.e}}</td>
+              <td>{{item.f}}</td>
+              <td>{{item.g}}</td>
+            </tr>
+          </table>
+
+          <h3>table-body Param</h3>
+          <table class="table">
+            <tr>
+              <th>参数</th>
+              <th>说明</th>
+              <th>类型</th>
+              <th>可选值</th>
+              <th>默认值</th>
+              <th>回调参数</th>
+              <th>是否必传</th>
+            </tr>
+            <tr v-for="(item,index) in paramTableTd" :key="index">
               <td>{{item.a}}</td>
               <td>{{item.b}}</td>
               <td>{{item.c}}</td>
@@ -188,12 +274,45 @@ export default {
         e: '--',
         f: '--',
         g: '--'
+      }, {
+        a: 'height',
+        b: '最大高度，会固定表头',
+        c: 'String',
+        d: 'px/百分比',
+        e: '--',
+        f: '--',
+        g: '--'
       }],
       paramTableTh: [{
         a: 'fixed',
         b: '固定列,向左固定或者向右固定',
         c: 'String',
         d: 'left/right',
+        e: '--',
+        f: '--',
+        g: '--'
+      }, {
+        a: 'width',
+        b: 'th的最小宽度，内容太少时会自动撑开，内容多时会变成max-width',
+        c: 'String',
+        d: 'px/百分比',
+        e: '--',
+        f: '--',
+        g: '--'
+      }],
+      paramTableTd: [{
+        a: 'fixed',
+        b: '固定列，向左固定或者向右固定',
+        c: 'String',
+        d: 'left/right',
+        e: '--',
+        f: '--',
+        g: '--'
+      }, {
+        a: 'width',
+        b: 'td的最小宽度，内容太少时会自动撑开，内容多时会变成max-width，并且会换行',
+        c: 'String',
+        d: 'px/百分比',
         e: '--',
         f: '--',
         g: '--'
@@ -249,16 +368,43 @@ export default {
     <zd-table-body prop='name' fixed="right" :data="scope.row" />
   </template>
 </zd-table>`,
-      loading: true
+      datafixbiaotou: `<zd-table border striped :data='data' :height='300px'>
+  <zd-table-head label='字段1' />
+  <zd-table-head label='字段2' />
+  <template #tbody="scope">
+    <zd-table-body prop='name' :data="scope.row" />
+    <zd-table-body prop='name2' :data="scope.row" />
+  </template>
+</zd-table>`,
+      datawidth: `<zd-table border striped :data='data'>
+  <!-- 表头 -->
+  <zd-table-head label='字段1' />
+  <zd-table-head label='这个是比较长的宽度'/>
+  <zd-table-head label='字段K'/>
+  <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
+  <!-- 主体 -->
+  <template #tbody="scope">
+    <zd-table-body prop='name' :data="scope.row" />
+    <zd-table-body prop='name3' :data="scope.row" width="200px" />
+    <zd-table-body prop='name4' :data="scope.row" />
+    <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
+  </template>
+</zd-table>`,
+      loading: true,
+      data1: []
     }
   },
   mounted () {
     this.data = [
-      { name: 'test1', name2: 'test2' },
-      { name: 'test3', name2: 'test4' },
-      { name: 'test5', name2: 'test6' },
-      { name: 'test7', name2: 'test8' }
+      { name: 'test1', name2: 'test2', name3: '如果th设置了宽度，那么td不会跟着内容去撑，达到设置的宽度后会换行', name4: '因为我没有设置宽度，所以我跟着内容自动撑开了，而且不换行', name5: '我的内容比较多，所以超出省略悬浮上去会有悬浮框显示所有内容呢' },
+      { name: 'test3', name2: 'test4', name3: '', name5: '内容比较少不用悬浮' },
+      { name: 'test5', name2: 'test6', name3: '' },
+      { name: 'test7', name2: 'test8', name3: '' }
     ]
+    this.data1 = []
+    for (let i = 0; i < 100; i++) {
+      this.data1.push({ name: 'test1', name2: 'test2' })
+    }
     // setTimeout(() => {
     //   this.data = [
     //     { name: 'test5', name2: 'test7' },

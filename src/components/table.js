@@ -67,7 +67,7 @@ export function setFixedWidthTd (className, fixValue) {
 }
 
 export function getTextLength (value) {
-  // 计算字体长度
+  // 计算字体长度 用来判断什么时候超出省略
   // 中文、中文标点、全角字符按1长度，英文、英文符号、数字按0.5长度计算
   if (value) {
     value = String(value)
