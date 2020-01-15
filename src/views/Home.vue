@@ -20,7 +20,7 @@
         <!-- <h3>链接</h3> -->
         <!-- <a><a href="https://github.com/a873969678/linshengji-ui">git仓库地址</a></p> -->
       </div>
-      <div style="width:75%;float:left;padding:0 10px" class="right-menu">
+      <div style="width:75%;float:right;" class="right-menu">
         <div>
           <h2 id="使用方法">Table(如果有什么不会的，请熟读并背诵文档)</h2>
           <h3>使用方法</h3>
@@ -634,9 +634,10 @@ rowClassName (rowIndex, rowData) {
 
 <style lang="scss">
 .home{
-  width:80%;
+  width:100%;
   position: relative;
   margin: 0 auto;
+  overflow: auto;
 }
 .light{
   background: oldlace!important;
@@ -649,6 +650,7 @@ rowClassName (rowIndex, rowData) {
     zoom: 1;
   }
   .left-menu{
+    width: 15%;
     margin-top: 50px;
     height: 100%;
     overflow-x: auto;
