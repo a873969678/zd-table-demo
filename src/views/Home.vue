@@ -11,12 +11,14 @@
         <p><a href="#固定表头">固定表头</a></p>
         <p><a href="#自定义宽度">自定义宽度</a></p>
         <p><a href="#超出省略">超出省略</a></p>
+        <h3>链接</h3>
+        <p><a href="https://github.com/a873969678/zd-table-demo">git仓库地址</a></p>
         <!-- <h3>链接</h3> -->
         <!-- <a><a href="https://github.com/a873969678/linshengji-ui">git仓库地址</a></p> -->
       </div>
       <div style="width:75%;float:left;padding:0 10px" class="right-menu">
         <div>
-          <h2 id="使用方法">Table</h2>
+          <h2 id="使用方法">Table(如果有什么不会的，请熟读并背诵文档)</h2>
           <h3>使用方法</h3>
           <div class="hljs">
             <p>import ZdTable from '@/components/ZdTable.vue'</p>
@@ -158,18 +160,20 @@
             <zd-table border striped :data='data'>
               <!-- 表头 -->
               <zd-table-head label='字段1' />
-              <zd-table-head label='这个是比较长的宽度'/>
+              <zd-table-head label='这个是比较长的宽度这个是比较长的宽度这个是比较长的宽度'/>
+              <zd-table-head label='这个是比较长的宽度会超出省略这个是比较长的宽度会超出省略' width="200px" show-overflow-tooltip/>
               <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
               <!-- 主体 -->
               <template #tbody="scope">
                 <zd-table-body prop='name' :data="scope.row" />
+                <zd-table-body prop='name5' :data="scope.row" width="200px" show-overflow-tooltip />
                 <zd-table-body prop='name5' :data="scope.row" width="200px" show-overflow-tooltip />
                 <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
               </template>
             </zd-table>
           </div>
           <p class="hljs">
-            {{datawidth}}
+            {{datatooltip}}
           </p>
 
           <h3>Table Param</h3>
@@ -316,25 +320,37 @@ export default {
         e: '--',
         f: '--',
         g: '--'
+      }, {
+        a: 'show-overflow-tooltip',
+        b: '超出省略，需要配合width或者min-width',
+        c: 'Boolean',
+        d: 'true/false',
+        e: 'false',
+        f: '--',
+        g: '--'
       }],
       databmx: `<zd-table border striped :data='data'>
+  <!-- 表头 -->
   <zd-table-head label='字段1' />
   <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
+  <!-- 主体 -->
   <template #tbody="scope">
     <zd-table-body prop='name' :data="scope.row" />
     <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
   </template>
 </zd-table>`,
       datareset: `<zd-table :data='data'>
+  <!-- 表头 -->
   <zd-table-head label='字段1' />
   <zd-table-head label='字段2' />
-
+  <!-- 主体 -->
   <template #tbody="scope">
     <zd-table-body prop='name' :data="scope.row" />
     <zd-table-body prop='name2' :data="scope.row" />
   </template>
 </zd-table>`,
       datajggdl: `<zd-table border striped :data='data'>
+  <!-- 表头 -->
   <zd-table-head label='固定left' fixed="left" />
   <zd-table-head label='固定left' fixed="left" />
   <zd-table-head label='字段2' v-for="(item,index) in 20" :key="index" />
@@ -350,6 +366,7 @@ export default {
   </template>
 </zd-table>`,
       datajggdl1: `<zd-table border striped :data='data'>
+  <!-- 表头 -->
   <zd-table-head label='固定left' fixed="left" />
   <zd-table-head label='固定left' fixed="left" />
   <zd-table-head label='字段1' v-for="(item,index) in 4" :key="index+'a'" />
@@ -387,6 +404,20 @@ export default {
     <zd-table-body prop='name' :data="scope.row" />
     <zd-table-body prop='name3' :data="scope.row" width="200px" />
     <zd-table-body prop='name4' :data="scope.row" />
+    <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
+  </template>
+</zd-table>`,
+      datatooltip: `<zd-table border striped :data='data'>
+  <!-- 表头 -->
+  <zd-table-head label='字段1' />
+  <zd-table-head label='这个是比较长的宽度这个是比较长的宽度这个是比较长的宽度'/>
+  <zd-table-head label='这个是比较长的宽度会超出省略这个是比较长的宽度会超出省略' width="200px" show-overflow-tooltip/>
+  <zd-table-head label='字段2' v-for="(item,index) in 100" :key="index" />
+  <!-- 主体 -->
+  <template #tbody="scope">
+    <zd-table-body prop='name' :data="scope.row" />
+    <zd-table-body prop='name5' :data="scope.row" width="200px" show-overflow-tooltip />
+    <zd-table-body prop='name5' :data="scope.row" width="200px" show-overflow-tooltip />
     <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
   </template>
 </zd-table>`,
