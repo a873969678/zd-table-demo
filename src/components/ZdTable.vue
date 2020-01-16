@@ -6,13 +6,13 @@
         <tr class="zd-table-cloumn-tr zd-table-cloumn-tr-th">
           <slot />
         </tr>
-        <tr class="zd-table-cloumn-tr sum-cloumn sum-cloumn-prepend">
+        <tr class="zd-table-cloumn-tr zd-table-cloumn-tr-th sum-cloumn sum-cloumn-prepend">
           <!-- 尾部合计 -->
           <slot name="sumPrepend" />
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :key="index" :class="{'zd-table-cloumn-tr':true, [rowClassName(index, item) || '']:true}" @click="rowClick(index, item, $event)" @mouseenter="cellMouseEnter(index, item, $event)" @mouseleave="cellMouseLeave(index, item, $event)">
+        <tr v-for="(item, index) in data" :key="index" :class="{'zd-table-cloumn-tr':true, [rowClassName(index, item) || '']:true}" @dblclick.stop="rowDblclick(index, item, $event)" @click.stop="rowClick(index, item, $event)" @mouseenter="cellMouseEnter(index, item, $event)" @mouseleave="cellMouseLeave(index, item, $event)">
           <slot name="tbody" :row="item" :$index="index" />
         </tr>
         <tr class="zd-table-cloumn-tr sum-cloumn sum-cloumn-append">
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { setFixedWidthHead } from './table'
 export default {
   name: 'ZdTable',
   props: {
@@ -53,6 +54,10 @@ export default {
       type: Function, // 点击某一行
       default: () => {}
     },
+    rowDblclick: {
+      type: Function, // 双击某一行
+      default: () => {}
+    },
     cellMouseEnter: {
       type: Function, // 鼠标移入
       default: () => {}
@@ -64,10 +69,6 @@ export default {
     rowClassName: {
       type: Function, // 设置每一行的样式
       default: () => { return '' }
-    },
-    fixed: {
-      type: Boolean, // 使用固定功能
-      default: () => false
     }
   },
   data() {
@@ -83,14 +84,14 @@ export default {
   mounted() {
     const domTable = document.getElementsByClassName(this.className)[0]
     // 首次判断右边是否固定并且有滚动条
-    if (this.fixed) {
-      if (domTable.clientWidth !== domTable.scrollWidth - domTable.scrollLeft) {
-        setTimeout(() => {
-          this.addOrRemoveClass(domTable, 'add', 'right')
-        }, 200)
-      }
-      domTable.addEventListener('scroll', this.getScroll)
+    if (domTable.clientWidth !== domTable.scrollWidth - domTable.scrollLeft) {
+      setTimeout(() => {
+        this.addOrRemoveClass(domTable, 'add', 'right')
+      }, 200)
     }
+    domTable.addEventListener('scroll', this.getScroll)
+    // 固定，多表表头与合计的位置
+    setFixedWidthHead(this.className)
   },
   methods: {
     getScroll(e) {
@@ -219,7 +220,6 @@ export default {
     .sum-cloumn-prepend td{
       position: sticky;
       position: -webkit-sticky;
-      top: 37px;
       font-size: 12px;
       z-index: 2;
     }

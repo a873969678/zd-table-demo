@@ -12,6 +12,7 @@
         <p><a href="#自定义宽度">自定义宽度</a></p>
         <p><a href="#超出省略">超出省略</a></p>
         <p><a href="#合计">合计</a></p>
+        <p><a href="#排序">排序</a></p>
         <h3>方法</h3>
         <p><a href="#获取某一行数据">获取某一行数据</a></p>
         <p><a href="#设置某一行样式">设置某一行样式</a></p>
@@ -68,7 +69,7 @@
           <h3 id="固定列">固定列</h3>
           <p class="tip">在table指定使用fixed功能，fixed="left"向左固定 fixed="right" 向右固定</p>
           <div>
-            <zd-table border striped :data="data" fixed>
+            <zd-table border striped :data="data">
               <!-- 表头 -->
               <zd-table-head label="固定left" fixed="left" />
               <zd-table-head label="固定left" fixed="left" />
@@ -92,7 +93,7 @@
           <h3 id="间隔固定列">间隔固定列</h3>
           <p class="tip">在table指定使用fixed功能，在需要的地方加上fixed固定，拖动到指定位置时会自动合并</p>
           <div>
-            <zd-table border striped :data="data" fixed>
+            <zd-table border striped :data="data">
               <!-- 表头 -->
               <zd-table-head label="固定left" fixed="left" />
               <zd-table-head label="固定left" fixed="left" />
@@ -183,7 +184,7 @@
           <h3 id="合计">合计</h3>
           <p class="tip">使用插槽sumAppend与sumPrepend可以设置合计列位置，移动端ios尾部合集不能正常固定，如果移动端需要，请使用头部合计</p>
           <div>
-            <zd-table border striped :data="data1" height="300px" fixed>
+            <zd-table border striped :data="data1" height="300px">
               <!-- 表头 -->
               <zd-table-head label="字段1" fixed="left" />
               <zd-table-head v-for="(item,index) in 50" :key="index" label="字段2" />
@@ -193,25 +194,49 @@
                 <zd-table-body prop="name" fixed="left" :data="scope.row" />
                 <zd-table-body v-for="(item,index) in 50" :key="index" prop="name2" :data="scope.row" />
               </template>
+              <!-- 头部合计 -->
               <template #sumPrepend>
                 <zd-table-body fixed="left">合计头部</zd-table-body>
                 <zd-table-body v-for="(item,index) in 50" :key="index"> 1 </zd-table-body>
               </template>
+              <!-- 尾部合计 -->
               <template #sumAppend>
                 <zd-table-body fixed="left">合计尾部</zd-table-body>
                 <zd-table-body v-for="(item,index) in 50" :key="index"> 1 </zd-table-body>
               </template>
-
             </zd-table>
           </div>
           <p class="hljs">
-            {{ datam1 }}
+            {{ datam3 }}
+          </p>
+
+          <h3 id="排序">排序</h3>
+          <p class="tip">传入sortable指定排序 :sort-method="sortMethod"接收排序方法</p>
+          <div>
+            <zd-table border striped :data="data5" height="300px">
+              <!-- 表头 -->
+              <zd-table-head label="字段1" />
+              <zd-table-head label="排序" sortable :sort-method="sortMethod" />
+              <zd-table-head label="排序2" sortable :sort-method="sortMethod" />
+              <zd-table-head v-for="(item,index) in 6" :key="index" label="字段2" />
+
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body prop="name" :data="scope.row" />
+                <zd-table-body prop="name2" :data="scope.row" />
+                <zd-table-body prop="name2" :data="scope.row" />
+                <zd-table-body v-for="(item,index) in 6" :key="index" prop="name2" :data="scope.row" />
+              </template>
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{ datam5 }}
           </p>
 
           <h3 id="获取某一行数据">获取获取某一行数据</h3>
-          <p class="tip">设置row-click点击方法获取某一行数据，设置cell-mouse-enter与cell-mouse-leave获取移入移出某一行数据</p>
+          <p class="tip">设置row-click点击方法获取某一行数据，row-dblclick双击获取数据，设置cell-mouse-enter与cell-mouse-leave获取移入移出某一行数据</p>
           <div>
-            <zd-table border striped :data="data" :row-click="rowClick" :cell-mouse-enter="cellMouseEnter" :cell-mouse-leave="cellMouseLeave">
+            <zd-table border striped :data="data" :row-click="rowClick" :cell-mouse-enter="cellMouseEnter" :cell-mouse-leave="cellMouseLeave" :row-dblclick="rowDblclick">
               <!-- 表头 -->
               <zd-table-head label="序号" />
               <zd-table-head label="字段1" />
@@ -333,6 +358,24 @@
               <td>{{ item.e }}</td>
             </tr>
           </table>
+
+          <h3>tHead Methods</h3>
+          <table class="table">
+            <tr>
+              <th>方法名</th>
+              <th>说明</th>
+              <th>类型</th>
+              <th>回调参数</th>
+              <th>参数说明</th>
+            </tr>
+            <tr v-for="(item,index) in theadMethods" :key="index">
+              <td>{{ item.a }}</td>
+              <td>{{ item.b }}</td>
+              <td>{{ item.c }}</td>
+              <td>{{ item.d }}</td>
+              <td>{{ item.e }}</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
@@ -365,14 +408,6 @@ export default {
       }, {
         a: 'striped',
         b: '添加斑马线',
-        c: 'Boolean',
-        d: 'true/false',
-        e: '--',
-        f: '--',
-        g: '--'
-      }, {
-        a: 'fixed',
-        b: '指定使用固定列功能',
         c: 'Boolean',
         d: 'true/false',
         e: '--',
@@ -412,6 +447,13 @@ export default {
         d: 'rowIndex，rowData',
         e: 'rowIndex下标，rowData 整行数据'
       }],
+      theadMethods: [{
+        a: 'sortMethod',
+        b: '排序方法回调，需要结合sortable',
+        c: 'Function',
+        d: 'type，label',
+        e: 'type升序ascending或者降序descending，label那一列排序'
+      }],
       paramTableTh: [{
         a: 'fixed',
         b: '固定列,向左固定或者向右固定',
@@ -431,6 +473,14 @@ export default {
       }, {
         a: 'show-overflow-tooltip',
         b: '超出省略，需要配合width或者min-width',
+        c: 'Boolean',
+        d: 'true/false',
+        e: 'false',
+        f: '--',
+        g: '--'
+      }, {
+        a: 'sortable',
+        b: '是否需要排序',
         c: 'Boolean',
         d: 'true/false',
         e: 'false',
@@ -482,7 +532,7 @@ export default {
     <zd-table-body prop='name2' :data="scope.row" />
   </template>
 </zd-table>`,
-      datajggdl: `<zd-table border striped :data='data' fixed>
+      datajggdl: `<zd-table border striped :data='data'>
   <!-- 表头 -->
   <zd-table-head label='固定left' fixed="left" />
   <zd-table-head label='固定left' fixed="left" />
@@ -498,7 +548,7 @@ export default {
     <zd-table-body prop='name' fixed="right" :data="scope.row" />
   </template>
 </zd-table>`,
-      datajggdl1: `<zd-table border striped :data='data' fixed>
+      datajggdl1: `<zd-table border striped :data='data'>
   <!-- 表头 -->
   <zd-table-head label='固定left' fixed="left" />
   <zd-table-head label='固定left' fixed="left" />
@@ -554,7 +604,7 @@ export default {
     <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 100" :key="index" />
   </template>
 </zd-table>`,
-      datam1: `<zd-table border striped :data='data' :row-click='rowClick' :cell-mouse-enter="cellMouseEnter" :cell-mouse-leave="cellMouseLeave" >
+      datam1: `<zd-table border striped :data='data' :row-click='rowClick' :row-dblclick="rowDblclick" :cell-mouse-enter="cellMouseEnter" :cell-mouse-leave="cellMouseLeave" >
   <!-- 表头 -->
   <zd-table-head label='序号' />
   <zd-table-head label='字段1' />
@@ -569,6 +619,9 @@ export default {
 
 rowClick (rowIndex, rowData, event) {
   console.log(rowIndex, rowData, event)
+},
+rowDblclick(rowIndex, rowData, event) {
+  console.log(rowIndex, rowData, event, '双击')
 },
 cellMouseEnter (rowIndex, rowData, event) {
   console.log(rowIndex, rowData, event)
@@ -594,8 +647,59 @@ rowClassName (rowIndex, rowData) {
     return 'light'
   }
 }`,
+      datam3: `<zd-table border striped :data="data1" height="300px">
+  <!-- 表头 -->
+  <zd-table-head label="字段1" fixed="left" />
+  <zd-table-head v-for="(item,index) in 50" :key="index" label="字段2" />
+
+  <!-- 主体 -->
+  <template #tbody="scope">
+    <zd-table-body prop="name" fixed="left" :data="scope.row" />
+    <zd-table-body v-for="(item,index) in 50" :key="index" prop="name2" :data="scope.row" />
+  </template>
+  <!-- 头部合计 -->
+  <template #sumPrepend>
+    <zd-table-body fixed="left">合计头部</zd-table-body>
+    <zd-table-body v-for="(item,index) in 50" :key="index"> 1 </zd-table-body>
+  </template>
+  <!-- 尾部合计 -->
+  <template #sumAppend>
+    <zd-table-body fixed="left">合计尾部</zd-table-body>
+    <zd-table-body v-for="(item,index) in 50" :key="index"> 1 </zd-table-body>
+  </template>
+</zd-table>`,
+      datam5: `<zd-table border striped :data="data5" height="300px">
+  <!-- 表头 -->
+  <zd-table-head label="字段1" />
+  <zd-table-head label="排序" sortable :sort-method="sortMethod" />
+  <zd-table-head label="排序2" sortable :sort-method="sortMethod" />
+  <zd-table-head v-for="(item,index) in 6" :key="index" label="字段2" />
+
+  <!-- 主体 -->
+  <template #tbody="scope">
+    <zd-table-body prop="name" :data="scope.row" />
+    <zd-table-body prop="name2" :data="scope.row" />
+    <zd-table-body prop="name2" :data="scope.row" />
+    <zd-table-body v-for="(item,index) in 6" :key="index" prop="name2" :data="scope.row" />
+  </template>
+</zd-table>
+
+
+sortMethod(type, label) {
+  console.log('升序或者降序：' + type, '那一行排序 ：' + label)
+  this.data5.sort((a, b) => {
+    if (type === 'ascending') {
+      // 降序
+      return a['name2'] > b['name2'] ? 1 : -1
+    } else {
+      // 升序
+      return a['name2'] < b['name2'] ? 1 : -1
+    }
+  })
+}`,
       loading: true,
-      data1: []
+      data1: [],
+      data5: []
     }
   },
   mounted() {
@@ -607,7 +711,11 @@ rowClassName (rowIndex, rowData) {
     ]
     this.data1 = []
     for (let i = 0; i < 100; i++) {
-      this.data1.push({ name: 'test1', name2: 'test2' })
+      this.data1.push({ name: 'test1', name2: Math.ceil(Math.random(100) * 100) })
+    }
+    this.data5 = []
+    for (let i = 0; i < 20; i++) {
+      this.data5.push({ name: 'test1', name2: Math.ceil(Math.random(100) * 100) })
     }
     // setTimeout(() => {
     //   this.data = [
@@ -618,7 +726,7 @@ rowClassName (rowIndex, rowData) {
   },
   methods: {
     rowClick(rowIndex, rowData, event) {
-      console.log(rowIndex, rowData, event)
+      console.log(rowIndex, rowData, event, '单击')
     },
     cellMouseEnter(rowIndex, rowData, event) {
       console.log(rowIndex, rowData, event)
@@ -626,10 +734,25 @@ rowClassName (rowIndex, rowData) {
     cellMouseLeave(rowIndex, rowData, event) {
       console.log(rowIndex, rowData, event)
     },
+    rowDblclick(rowIndex, rowData, event) {
+      console.log(rowIndex, rowData, event, '双击')
+    },
     rowClassName(rowIndex, rowData) {
       if (rowIndex === 2) {
         return 'light'
       }
+    },
+    sortMethod(type, label) {
+      console.log('升序或者降序：' + type, '那一行排序 ：' + label)
+      this.data5.sort((a, b) => {
+        if (type === 'ascending') {
+          // 降序
+          return a['name2'] > b['name2'] ? 1 : -1
+        } else {
+          // 升序
+          return a['name2'] < b['name2'] ? 1 : -1
+        }
+      })
     }
   }
 }

@@ -1,13 +1,12 @@
 <template>
   <td
-    :class="{'fixed-left-td':fixed==='left','fixed-right-td':fixed==='right','white-space-nowrap':!minWidth && !width}"
+    :class="{'zd-table-cloumn-tr-td':true,'fixed-left-td':fixed==='left','fixed-right-td':fixed==='right','white-space-nowrap':!minWidth && !width}"
     :style="{'min-width':minWidth || width, 'width':minWidth || width}"
   >
     <!-- 避免生成不必要的节点，分开写 -->
     <el-tooltip :content="data ? data[prop]+'' || '' : ''" :disabled="!(showOverflowTooltip && widthValue && getTextLength(data ? data[prop] || '' : '') * tdFontSize > widthValue)" placement="top" effect="light">
       <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':minWidth || width}"><slot>{{ data ? data[prop] || '' : '' }}</slot></span>
     </el-tooltip>
-
   </td>
 </template>
 

@@ -65,6 +65,24 @@ export function setFixedWidthTd(className, fixValue) {
     }
   }
 }
+// 表头固定值计算
+export function setFixedWidthHead(className) {
+  // table类名 需要计算固定的类名
+  // 设置多个固定td的距离
+  const dom = document.getElementsByClassName(className)[0].getElementsByClassName('zd-table-cloumn-tr-th') // 获取对应的类名
+  if (dom.length > 1) {
+    let num = dom[0].clientHeight
+    for (let i = 1; i < dom.length; i++) {
+      const fixName = dom[i].getElementsByClassName('zd-table-cloumn-tr-td')
+      // 不断加以前的高度
+      for (let j = 0; j < fixName.length; j++) {
+        // 后面为前面宽度之和
+        fixName[j].style.top = num - 1 + 'px'
+      }
+      num += dom[i].clientHeight
+    }
+  }
+}
 
 export function getTextLength(value) {
   // 计算字体长度 用来判断什么时候超出省略
