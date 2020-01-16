@@ -20,7 +20,6 @@ export default class ColResizable {
     this.options = { ...ColResizable.defaults, ...options }
     this.domElmTable = domElmTable
     this.object = {}
-    this.minWidthList = []
     this.onGripMouseDown = this.onGripMouseDown.bind(this)
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onMouseUp = this.onMouseUp.bind(this)
@@ -100,12 +99,6 @@ export default class ColResizable {
       }
       this.domElmTableTheadThList.push(domElmTh)
     })
-    // 获取所有的最小宽度
-    const arr = []
-    for (let i = 0; i < this.domElmTableTheadThList.length; i++) {
-      arr.push(this.domElmTableTheadThList[i].clientWidth)
-    }
-    this.minWidthList = arr
     this.syncGrips()
   }
 
@@ -194,8 +187,9 @@ export default class ColResizable {
     const w = domElmThNow.w + inc
     const w2 = domElmThElmNext.w - inc
     // 最大最小
-    const minWidthOne = this.minWidthList || 0
-    const minWidthTwo = this.minWidthList || 0
+    const minWidthOne = tryParseInt(this.domElmTableTheadThList[index].getAttribute('data-min-width'))
+    const minWidthTwo = tryParseInt(this.domElmTableTheadThList[index + 1].getAttribute('data-min-width'))
+
     if (minWidthOne > w) {
       x = (minWidthOne - domElmThNow.w) + this.drag.initLeft
     } else if (minWidthTwo > w2) {
