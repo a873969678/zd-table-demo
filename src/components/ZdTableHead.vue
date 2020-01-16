@@ -1,10 +1,13 @@
 <template>
   <th
     :class="{'fixed-left-th':fixed==='left','fixed-right-th':fixed==='right'}"
-    :style="{'min-width':minWidth || width, 'width':minWidth || width}"
+    :style="{'min-width':widthValue+'px', 'width':widthValue+'px'}"
+    :colspan="colspan"
+    :rowspan="rowspan"
+    scope="row"
   >
     <el-tooltip :content="label" :disabled="!(showOverflowTooltip && widthValue && getTextLength(label) * tdFontSize > widthValue)" placement="top" effect="light">
-      <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':minWidth || width}"> <slot>{{ label }}</slot></span>
+      <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':'inherit'}"> <slot>{{ label }}</slot></span>
     </el-tooltip>
     <div v-if="sortable" class="sort">
       <!-- 排序 -->
@@ -19,7 +22,8 @@
 </template>
 
 <script>
-import { setFixedWidthTh, getTextLength } from './table'
+import { setFixedWidthTh, getTextLength, setFixedWidthTd } from './table'
+import createColResizable from './resozableTable'
 export default {
   name: 'ZdTableHead',
   props: {
@@ -50,6 +54,14 @@ export default {
     sortMethod: {
       type: Function,
       default: () => {} // 排序方法
+    },
+    colspan: {
+      type: Number, // 行合并
+      default: 1
+    },
+    rowspan: {
+      type: Number, // 列合并
+      default: 1
     }
   },
   data() {
@@ -64,6 +76,18 @@ export default {
     '$parent.data'(newValue, oldValue) {
       // 监听table值的变化
       this.data = newValue
+      setTimeout(() => {
+        const tableName = '.zd-table-wrapper' + this.$parent.className
+        const domElemTable = document.querySelector(tableName)
+        if (this.$parent.$props.headerDragend) {
+          createColResizable(domElemTable, {
+            liveDrag: false,
+            onResized: (e) => {
+              this.resetFun()
+            }
+          })
+        }
+      }, 1000)
     },
     fixed(newValue, oldValue) {
       if (newValue) {
@@ -76,22 +100,52 @@ export default {
   created() {
   },
   mounted() {
-    this.data = this.$parent.data
-    this.widthValue = (this.minWidth || this.width).replace('px', '')
-    if (this.fixed) {
-      setTimeout(() => {
-        setFixedWidthTh(this.$parent.className, this.fixed) // 设置多个固定列的距离
-      }, 200)
-    }
-    if (this.showOverflowTooltip) {
-      if (document.getElementsByTagName('td').length > 0) {
-      // 用来判断什么时候超出省略
-        this.tdFontSize = window.getComputedStyle(document.getElementsByTagName('th')[0]).fontSize.replace('px', '')
+    this.resetFun()
+    setTimeout(() => {
+      const tableName = '.zd-table-wrapper' + this.$parent.className
+      if (this.$parent.$props.headerDragend) {
+        const domElemTable = document.querySelector(tableName)
+        createColResizable(domElemTable, {
+          liveDrag: false,
+          onResized: (object, drag) => {
+          // 改变表头的省略宽度
+            const dom = document.getElementsByClassName('zd-table-wrapper' + this.$parent.className)[0].getElementsByClassName('zd-table-cloumn-tr')
+            for (let i = 0; i < dom.length; i++) {
+            // 主要针对超出省略
+              const thDom = dom[i].getElementsByClassName('zd-table-cloumn-tr-td')
+              if (thDom[drag.index]) {
+                thDom[drag.index].style.minWidth = `${object.w}px`
+                thDom[drag.index].style.width = `${object.w}px`
+              }
+              if (thDom[drag.index + 1]) {
+                thDom[drag.index + 1].style.minWidth = `${object.w2}px`
+                thDom[drag.index + 1].style.width = `${object.w2}px`
+              }
+            }
+            this.resetFun()
+          }
+        })
       }
-    }
+    }, 1000)
   },
   methods: {
     getTextLength,
+    resetFun() {
+      this.data = this.$parent.data
+      this.widthValue = (this.minWidth || this.width).replace('px', '')
+      if (this.fixed) {
+        setTimeout(() => {
+          setFixedWidthTh(this.$parent.className, this.fixed) // 设置多个固定列的距离
+          setFixedWidthTd(this.$parent.className, this.fixed)
+        }, 200)
+      }
+      if (this.showOverflowTooltip) {
+        if (document.getElementsByTagName('td').length > 0) {
+          // 用来判断什么时候超出省略
+          this.tdFontSize = window.getComputedStyle(document.getElementsByTagName('th')[0]).fontSize.replace('px', '')
+        }
+      }
+    },
     sortChange(type, className) {
       // 取消所有排序图标的颜色
       const domDesc = document.getElementsByClassName(this.$parent.className)[0].getElementsByClassName('descending')

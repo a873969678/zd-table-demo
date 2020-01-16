@@ -13,6 +13,7 @@
         <p><a href="#超出省略">超出省略</a></p>
         <p><a href="#合计">合计</a></p>
         <p><a href="#排序">排序</a></p>
+        <p><a href="#动态列宽">动态列宽</a></p>
         <h3>方法</h3>
         <p><a href="#获取某一行数据">获取某一行数据</a></p>
         <p><a href="#设置某一行样式">设置某一行样式</a></p>
@@ -143,13 +144,13 @@
             <zd-table border striped :data="data">
               <!-- 表头 -->
               <zd-table-head label="字段1" />
-              <zd-table-head label="这个是比较长的宽度" />
+              <zd-table-head label="这个是比较长的宽度" width="200px" />
               <zd-table-head label="字段K" />
               <zd-table-head v-for="(item,index) in 100" :key="index" label="字段2" />
               <!-- 主体 -->
               <template #tbody="scope">
                 <zd-table-body prop="name" :data="scope.row" />
-                <zd-table-body prop="name3" :data="scope.row" width="200px" />
+                <zd-table-body prop="name3" :data="scope.row" />
                 <zd-table-body prop="name4" :data="scope.row" />
                 <zd-table-body v-for="(item,index) in 100" :key="index" prop="name2" :data="scope.row" />
               </template>
@@ -231,6 +232,28 @@
           </div>
           <p class="hljs">
             {{ datam5 }}
+          </p>
+
+          <h3 id="动态列宽">动态列宽</h3>
+          <p class="tip">指定header-dragend可拖拽列宽,鼠标悬浮在表头的边框中，可以拖拽</p>
+          <div>
+            <zd-table border striped :data="data" header-dragend>
+              <!-- 表头 -->
+              <zd-table-head label="字段1" />
+              <zd-table-head label="这个是比较长的宽度这个是比较长的宽度这个是比较长的宽度" />
+              <zd-table-head label="这个是比较长的宽度会超出省略这个是比较长的宽度会超出省略" width="200px" show-overflow-tooltip />
+              <zd-table-head v-for="(item,index) in 100" :key="index" label="字段2" />
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body prop="name" :data="scope.row" />
+                <zd-table-body prop="name5" :data="scope.row" width="200px" show-overflow-tooltip />
+                <zd-table-body prop="name5" :data="scope.row" width="200px" show-overflow-tooltip />
+                <zd-table-body v-for="(item,index) in 100" :key="index" prop="name2" :data="scope.row" />
+              </template>
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{ datam6 }}
           </p>
 
           <h3 id="获取某一行数据">获取获取某一行数据</h3>
@@ -697,6 +720,20 @@ sortMethod(type, label) {
     }
   })
 }`,
+      datam6: `<zd-table border striped :data="data" header-dragend>
+<!-- 表头 -->
+<zd-table-head label="字段1" />
+<zd-table-head label="这个是比较长的宽度这个是比较长的宽度这个是比较长的宽度" />
+<zd-table-head label="这个是比较长的宽度会超出省略这个是比较长的宽度会超出省略" width="200px" show-overflow-tooltip />
+<zd-table-head v-for="(item,index) in 100" :key="index" label="字段2" />
+<!-- 主体 -->
+<template #tbody="scope">
+  <zd-table-body prop="name" :data="scope.row" />
+  <zd-table-body prop="name5" :data="scope.row" width="200px" show-overflow-tooltip />
+  <zd-table-body prop="name5" :data="scope.row" width="200px" show-overflow-tooltip />
+  <zd-table-body v-for="(item,index) in 100" :key="index" prop="name2" :data="scope.row" />
+</template>
+</zd-table>`,
       loading: true,
       data1: [],
       data5: []

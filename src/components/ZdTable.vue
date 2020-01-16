@@ -1,7 +1,7 @@
 <template>
-  <div :class="{'zd-table':true, [className]:true ,'zd-table-border-div': border}" :style="{'max-height':height}">
+  <div id="zd-table" :class="{'zd-table':true, [className]:true ,'zd-table-border-div': border}" :style="{'max-height':height}">
     <!-- zd-table-striped 间隔色 zd-table-border 边框 -->
-    <table :class="{'zd-table-wrapper':true,'zd-table-striped':striped,'zd-table-border':border}">
+    <table :class="{'zd-table-wrapper':true,['zd-table-wrapper'+className]: true, 'zd-table-striped':striped,'zd-table-border':border}">
       <thead>
         <tr class="zd-table-cloumn-tr zd-table-cloumn-tr-th">
           <slot />
@@ -31,6 +31,7 @@
 
 <script>
 import { setFixedWidthHead } from './table'
+
 export default {
   name: 'ZdTable',
   props: {
@@ -69,6 +70,10 @@ export default {
     rowClassName: {
       type: Function, // 设置每一行的样式
       default: () => { return '' }
+    },
+    headerDragend: {
+      type: Boolean,
+      default: false // 是否拖拽宽度
     }
   },
   data() {
@@ -87,7 +92,7 @@ export default {
     if (domTable.clientWidth !== domTable.scrollWidth - domTable.scrollLeft) {
       setTimeout(() => {
         this.addOrRemoveClass(domTable, 'add', 'right')
-      }, 200)
+      }, 500)
     }
     domTable.addEventListener('scroll', this.getScroll)
     // 固定，多表表头与合计的位置
@@ -274,7 +279,7 @@ export default {
   .zd-table-striped{
     // 间隔色
     tbody{
-      tr:nth-child(odd){
+      tr:nth-child(even){
         background: rgb(245,247,250);
       }
     }
@@ -287,18 +292,61 @@ export default {
   .showOverflowTooltip{
     display:inline-block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
+
+.col-resize-container {
+  height: 0px;
+  position: relative;
+}
+.col-resize-container + .table-col-resizer:first-of-type {
+  table-layout: fixed;
+}
+.col-resize-container .active-drag .icon {
+  visibility: visible;
+}
+.col-resize-container .last-handle {
+  display: none;
+}
+.col-resize-container .drag-handle {
+  margin-left: -5px;
+  position: absolute;
+  z-index: 5;
+  width: 10px;
+  cursor: col-resize;
+}
+.col-resize-container .drag-handle .icon {
+  color: #40b0dc;
+  top: -1px;
+  position: absolute;
+  visibility: hidden;
+}
+.col-resize-container .drag-handle .icon:first-child {
+  left: -2px;
+}
+.col-resize-container .drag-handle .icon:last-child {
+  left: 6px;
+}
+.col-resize-container .drag-handle:hover .icon {
+  visibility: visible;
+}
+.col-resize-container .drag-handle:hover .col-resizer {
+  border: 1px solid #50bfff;
+}
+.col-resize-container .drag-handle.disabled-drag {
+  cursor: default;
+  display: none;
+}
+.col-resize-container .drag-handle .col-resizer {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  top: 0px;
+  left: 3px;
+}
 }
 .zd-table-border-div{
   border-left:1px solid #EBEEF5;
   border-top:1px solid #EBEEF5;
   border-right:1px solid #EBEEF5;
 }
-
-// @media (max-height: 1000px) and (max-width: 1000px) {
-//   // 横屏微调
-//   .sum-cloumn-append td {
-//       bottom: 50px;
-//   }
-// }
 
 </style>

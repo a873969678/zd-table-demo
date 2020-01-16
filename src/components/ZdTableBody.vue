@@ -2,10 +2,12 @@
   <td
     :class="{'zd-table-cloumn-tr-td':true,'fixed-left-td':fixed==='left','fixed-right-td':fixed==='right','white-space-nowrap':!minWidth && !width}"
     :style="{'min-width':minWidth || width, 'width':minWidth || width}"
+    :colspan="colspan"
+    :rowspan="rowspan"
   >
     <!-- 避免生成不必要的节点，分开写 -->
     <el-tooltip :content="data ? data[prop]+'' || '' : ''" :disabled="!(showOverflowTooltip && widthValue && getTextLength(data ? data[prop] || '' : '') * tdFontSize > widthValue)" placement="top" effect="light">
-      <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':minWidth || width}"><slot>{{ data ? data[prop] || '' : '' }}</slot></span>
+      <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':'inherit'}"><slot>{{ data ? data[prop] || '' : '' }}</slot></span>
     </el-tooltip>
   </td>
 </template>
@@ -38,6 +40,14 @@ export default {
     showOverflowTooltip: {
       type: Boolean,
       default: () => false // 超出省略
+    },
+    colspan: {
+      type: Number, // 行合并
+      default: 1
+    },
+    rowspan: {
+      type: Number, // 列合并
+      default: 1
     }
   },
   data() {
@@ -60,21 +70,24 @@ export default {
     }
   },
   mounted() {
-    this.widthValue = (this.minWidth || this.width).replace('px', '')
-    if (this.fixed) {
-      setTimeout(() => {
-        setFixedWidthTd(this.$parent.className, this.fixed) // 设置多个固定列的距离
-      }, 200)
-    }
-    if (this.showOverflowTooltip) {
-      if (document.getElementsByTagName('td').length > 0) {
-      // 用来判断什么时候超出省略
-        this.tdFontSize = window.getComputedStyle(document.getElementsByTagName('td')[0]).fontSize.replace('px', '')
-      }
-    }
+    this.resetFun()
   },
   methods: {
-    getTextLength
+    getTextLength,
+    resetFun() {
+      this.widthValue = (this.minWidth || this.width).replace('px', '')
+      if (this.fixed) {
+        setTimeout(() => {
+          setFixedWidthTd(this.$parent.className, this.fixed) // 设置多个固定列的距离
+        }, 200)
+      }
+      if (this.showOverflowTooltip) {
+        if (document.getElementsByTagName('td').length > 0) {
+          // 用来判断什么时候超出省略
+          this.tdFontSize = window.getComputedStyle(document.getElementsByTagName('td')[0]).fontSize.replace('px', '')
+        }
+      }
+    }
   }
 }
 </script>
