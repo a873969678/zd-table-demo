@@ -7,13 +7,13 @@
         <p><a href="#初始实例">初始实例</a></p>
         <p><a href="#斑马线与边框">斑马线与边框</a></p>
         <p><a href="#固定列">固定列</a></p>
-        <p><a href="#间隔固定列">间隔固定列</a></p>
-        <p><a href="#固定表头">固定表头</a></p>
+        <p><a href="#固定高度">固定高度</a></p>
         <p><a href="#自定义宽度">自定义宽度</a></p>
         <p><a href="#超出省略">超出省略</a></p>
         <p><a href="#合计">合计</a></p>
         <p><a href="#排序">排序</a></p>
         <p><a href="#动态列宽">动态列宽</a></p>
+        <p><a href="#多级表头">多级表头</a></p>
         <h3>方法</h3>
         <p><a href="#获取某一行数据">获取某一行数据</a></p>
         <p><a href="#设置某一行样式">设置某一行样式</a></p>
@@ -91,34 +91,6 @@
             {{ datajggdl }}
           </p>
 
-          <h3 id="间隔固定列">间隔固定列</h3>
-          <p class="tip">在table指定使用fixed功能，在需要的地方加上fixed固定，拖动到指定位置时会自动合并</p>
-          <div>
-            <zd-table border striped :data="data">
-              <!-- 表头 -->
-              <zd-table-head label="固定left" fixed="left" />
-              <zd-table-head label="固定left" fixed="left" />
-              <zd-table-head v-for="(item,index) in 4" :key="index+'a'" label="字段1" />
-              <zd-table-head label="我也是固定" fixed="left" />
-              <zd-table-head v-for="(item,index) in 20" :key="index" label="字段2" />
-              <zd-table-head label="固定right" fixed="right" />
-              <zd-table-head label="固定right" fixed="right" />
-              <!-- 主体 -->
-              <template #tbody="scope">
-                <zd-table-body prop="name" fixed="left" :data="scope.row" />
-                <zd-table-body prop="name" fixed="left" :data="scope.row" />
-                <zd-table-body v-for="(item,index) in 4" :key="index+'a'" prop="name" :data="scope.row" />
-                <zd-table-body prop="name" fixed="left" :data="scope.row" />
-                <zd-table-body v-for="(item,index) in 20" :key="index" prop="name2" :data="scope.row" />
-                <zd-table-body prop="name" fixed="right" :data="scope.row" />
-                <zd-table-body prop="name" fixed="right" :data="scope.row" />
-              </template>
-            </zd-table>
-          </div>
-          <p class="hljs">
-            {{ datajggdl1 }}
-          </p>
-
           <h3 id="固定高度">固定高度</h3>
           <p class="tip">传入height即可固定表头，height为max-height</p>
           <div>
@@ -150,7 +122,7 @@
               <!-- 主体 -->
               <template #tbody="scope">
                 <zd-table-body prop="name" :data="scope.row" />
-                <zd-table-body prop="name3" :data="scope.row" />
+                <zd-table-body prop="name3" :data="scope.row" width="200px" />
                 <zd-table-body prop="name4" :data="scope.row" />
                 <zd-table-body v-for="(item,index) in 100" :key="index" prop="name2" :data="scope.row" />
               </template>
@@ -161,7 +133,7 @@
           </p>
 
           <h3 id="超出省略">超出省略</h3>
-          <p class="tip">zd-table-head或者zd-table使用show-overflow-tooltip，必须设置width或者min-width，会超出省略并且显示悬浮内容，需要使用el-tooltip</p>
+          <p class="tip">zd-table-head或者zd-table使用show-overflow-tooltip，必须设置width或者min-width，会超出省略并且显示悬浮内容</p>
           <div>
             <zd-table border striped :data="data">
               <!-- 表头 -->
@@ -251,6 +223,33 @@
                 <zd-table-body prop="name5" :data="scope.row" width="200px" show-overflow-tooltip />
                 <zd-table-body prop="name5" :data="scope.row" width="200px" show-overflow-tooltip />
                 <zd-table-body v-for="(item,index) in 100" :key="index" prop="name2" :data="scope.row" />
+              </template>
+            </zd-table>
+          </div>
+          <p class="hljs">
+            {{ datam6 }}
+          </p>
+
+          <h3 id="多级表头">多级表头</h3>
+          <p class="tip">指定multis-head需要显示header,colspan与rowspan合并都可以使用</p>
+          <div>
+            <zd-table border striped :data="data1" :multis-head="2" header-dragend height="300px">
+              <!-- 表头 -->
+              <zd-table-head label="字段1" fixed="left" :rowspan="2" />
+              <zd-table-head label="字段1" fixed="left" :colspan="2" />
+              <zd-table-head v-for="(item,index) in 20" :key="index" label="字段2" />
+              <!-- 二级表头 -->
+              <template #multisTh>
+                <zd-table-head label="字段1" fixed="left" />
+                <zd-table-head label="字段1" fixed="left" />
+                <zd-table-head v-for="(item,index) in 20" :key="index" label="字段2" />
+              </template>
+              <!-- 主体 -->
+              <template #tbody="scope">
+                <zd-table-body prop="name" fixed="left" :data="scope.row" />
+                <zd-table-body prop="name" fixed="left" :data="scope.row" />
+                <zd-table-body prop="name" fixed="left" :data="scope.row" />
+                <zd-table-body v-for="(item,index) in 20" :key="index" prop="name2" :data="scope.row" />
               </template>
             </zd-table>
           </div>
@@ -567,26 +566,6 @@ export default {
   <!-- 主体 -->
   <template #tbody="scope">
     <zd-table-body prop='name' fixed="left" :data="scope.row" />
-    <zd-table-body prop='name' fixed="left" :data="scope.row" />
-    <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 20" :key="index" />
-    <zd-table-body prop='name' fixed="right" :data="scope.row" />
-    <zd-table-body prop='name' fixed="right" :data="scope.row" />
-  </template>
-</zd-table>`,
-      datajggdl1: `<zd-table border striped :data='data'>
-  <!-- 表头 -->
-  <zd-table-head label='固定left' fixed="left" />
-  <zd-table-head label='固定left' fixed="left" />
-  <zd-table-head label='字段1' v-for="(item,index) in 4" :key="index+'a'" />
-  <zd-table-head label='我也是固定' fixed="left" />
-  <zd-table-head label='字段2' v-for="(item,index) in 20" :key="index" />
-  <zd-table-head label='固定right' fixed="right" />
-  <zd-table-head label='固定right' fixed="right" />
-  <!-- 主体 -->
-  <template #tbody="scope">
-    <zd-table-body prop='name' fixed="left" :data="scope.row" />
-    <zd-table-body prop='name' fixed="left" :data="scope.row" />
-    <zd-table-body prop='name' :data="scope.row" v-for="(item,index) in 4" :key="index+'a'" />
     <zd-table-body prop='name' fixed="left" :data="scope.row" />
     <zd-table-body prop='name2' :data="scope.row" v-for="(item,index) in 20" :key="index" />
     <zd-table-body prop='name' fixed="right" :data="scope.row" />

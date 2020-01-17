@@ -5,10 +5,11 @@
     :colspan="colspan"
     :rowspan="rowspan"
   >
-    <!-- 避免生成不必要的节点，分开写 -->
-    <el-tooltip :content="data ? data[prop]+'' || '' : ''" :disabled="!(showOverflowTooltip && widthValue && getTextLength(data ? data[prop] || '' : '') * tdFontSize > widthValue)" placement="top" effect="light">
+    <div id="zd-table-cloumn-tr-content" class="zd-table-cloumn-tr-content">
       <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':'inherit'}"><slot>{{ data ? data[prop] || '' : '' }}</slot></span>
-    </el-tooltip>
+      <!-- // 悬浮显示 -->
+      <div v-if="showOverflowTooltip && widthValue && getTextLength(data ? data[prop] || '' : '') * tdFontSize > widthValue" id="zd-table-cloumn-tr-hover-box">{{ data ? data[prop]+'' || '' : '' }}</div>
+    </div>
   </td>
 </template>
 

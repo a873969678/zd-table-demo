@@ -1,13 +1,17 @@
 <template>
-  <div id="zd-table" :class="{'zd-table':true, [className]:true ,'zd-table-border-div': border}" :style="{'max-height':height}">
+  <div id="zd-table" :class="{'zd-table':true, [className]:true ,'zd-table-border-div': border}" :style="{'max-height':height,'height':height}">
     <!-- zd-table-striped 间隔色 zd-table-border 边框 -->
     <table :class="{'zd-table-wrapper':true,['zd-table-wrapper'+className]: true, 'zd-table-striped':striped,'zd-table-border':border}">
       <thead>
         <tr class="zd-table-cloumn-tr zd-table-cloumn-tr-th">
           <slot />
         </tr>
+        <!-- // 多级表头 -->
+        <tr v-for="index in multisHead -1" :key="index" class="zd-table-cloumn-tr zd-table-cloumn-tr-th">
+          <slot name="multisTh" />
+        </tr>
         <tr class="zd-table-cloumn-tr zd-table-cloumn-tr-th sum-cloumn sum-cloumn-prepend">
-          <!-- 尾部合计 -->
+          <!-- 头部合计 -->
           <slot name="sumPrepend" />
         </tr>
       </thead>
@@ -16,7 +20,7 @@
           <slot name="tbody" :row="item" :$index="index" />
         </tr>
         <tr class="zd-table-cloumn-tr sum-cloumn sum-cloumn-append">
-          <!-- 头部合计 -->
+          <!-- 尾部合计 -->
           <slot name="sumAppend" />
         </tr>
       </tbody>
@@ -74,6 +78,10 @@ export default {
     headerDragend: {
       type: Boolean,
       default: false // 是否拖拽宽度
+    },
+    multisHead: {
+      type: Number,
+      default: 1
     }
   },
   data() {
@@ -292,56 +300,95 @@ export default {
   .showOverflowTooltip{
     display:inline-block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-
-.col-resize-container {
-  height: 0px;
-  position: relative;
-}
-.col-resize-container + .table-col-resizer:first-of-type {
-  // table-layout: fixed;
-}
-.col-resize-container .active-drag .icon {
-  visibility: visible;
-}
-.col-resize-container .last-handle {
-  display: none;
-}
-.col-resize-container .drag-handle {
-  margin-left: -5px;
-  position: absolute;
-  z-index: 5;
-  width: 10px;
-  cursor: col-resize;
-}
-.col-resize-container .drag-handle .icon {
-  color: #40b0dc;
-  top: -1px;
-  position: absolute;
-  visibility: hidden;
-}
-.col-resize-container .drag-handle .icon:first-child {
-  left: -2px;
-}
-.col-resize-container .drag-handle .icon:last-child {
-  left: 6px;
-}
-.col-resize-container .drag-handle:hover .icon {
-  visibility: visible;
-}
-.col-resize-container .drag-handle:hover .col-resizer {
-  border: 1px solid #50bfff;
-}
-.col-resize-container .drag-handle.disabled-drag {
-  cursor: default;
-  display: none;
-}
-.col-resize-container .drag-handle .col-resizer {
-  position: absolute;
-  width: 1px;
-  height: 100%;
-  top: 0px;
-  left: 3px;
-}
+  #zd-table-cloumn-tr-content{
+    position: relative;
+  }
+  #zd-table-cloumn-tr-hover-box:after{
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-bottom-color: #000000;
+    position: absolute;
+    right: 20px;
+    top: -13px;
+    content: ""
+  }
+  #zd-table-cloumn-tr-hover-box:before{
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-bottom-color: white;
+    position: absolute;
+    right: 20px;
+    top: -12px;
+    content: "";
+    z-index: 9999;
+  }
+  #zd-table-cloumn-tr-hover-box{
+    display: none;
+    position: absolute;
+    top: calc(135%);
+    left: 20%;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    padding: 5px;
+    z-index: 999;
+    background: #fff;
+    color: #666;
+    text-align: left;
+  }
+  #zd-table-cloumn-tr-content:hover #zd-table-cloumn-tr-hover-box{
+    display:block;
+  }
+  .col-resize-container {
+    height: 0px;
+    position: relative;
+  }
+  .col-resize-container + .table-col-resizer:first-of-type {
+    // table-layout: fixed;
+  }
+  .col-resize-container .active-drag .icon {
+    visibility: visible;
+  }
+  .col-resize-container .last-handle {
+    display: none;
+  }
+  .col-resize-container .drag-handle {
+   margin-left: -5px;
+    position: absolute;
+    z-index: 5;
+    width: 10px;
+    cursor: col-resize;
+  }
+  .col-resize-container .drag-handle .icon {
+    color: #40b0dc;
+    top: -1px;
+    position: absolute;
+    visibility: hidden;
+  }
+  .col-resize-container .drag-handle .icon:first-child {
+    left: -2px;
+  }
+  .col-resize-container .drag-handle .icon:last-child {
+    left: 6px;
+  }
+  .col-resize-container .drag-handle:hover .icon {
+    visibility: visible;
+  }
+  .col-resize-container .drag-handle:hover .col-resizer {
+    border: 1px solid #50bfff;
+  }
+  .col-resize-container .drag-handle.disabled-drag {
+    cursor: default;
+    display: none;
+  }
+  .col-resize-container .drag-handle .col-resizer {
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    top: 0px;
+    left: 3px;
+  }
 }
 .zd-table-border-div{
   border-left:1px solid #EBEEF5;

@@ -8,7 +8,7 @@ import {
 
 export default class ColResizable {
   static defaults = {
-    liveDrag: true, // 是否实时拖动
+    liveDrag: false, // 是否实时拖动
     defaultMinWidth: 30, // 默认没列最小宽度
     headerOnly: true, // 拖动竖线是否只有thead
     disabledColumns: [], // 不能拖动的th
@@ -23,16 +23,13 @@ export default class ColResizable {
     this.onGripMouseDown = this.onGripMouseDown.bind(this)
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onMouseUp = this.onMouseUp.bind(this)
-
     this.init()
   }
 
   init() {
     addClass(this.domElmTable, 'table-col-resizer')
-
     this.domElmHandleList = []
     this.domElmTableTheadThList = []
-    this.tableWidth = `${this.domElmTable.offsetWidth}px`
 
     this.cellSpacing = tryParseInt(getComputedStyle(this.domElmTable).getPropertyValue('border-spacing'))
     this.borderLeftWidth = tryParseInt(getComputedStyle(this.domElmTable).getPropertyValue('border-left-width'))
@@ -40,7 +37,7 @@ export default class ColResizable {
     this.createGrips()
   }
 
-  createGrips() {
+  createGrips(type = true) {
     const thList = this.domElmTable.querySelectorAll('thead th')
 
     const domElmThList = []
@@ -91,9 +88,11 @@ export default class ColResizable {
       }
 
       domElmHandle.index = index
-      domElmTh.w = domElmTh.offsetWidth
-
-      domElmTh.style.width = `${domElmTh.offsetWidth}px`
+      if (type) {
+        // 拖拽完成之后不需要重新设置宽度，否则会导致总体table宽度变宽
+        domElmTh.w = domElmTh.offsetWidth
+        domElmTh.style.width = `${domElmTh.offsetWidth}px`
+      }
       if (!hasHandleContainer) {
         this.domElmHandleList.push(domElmHandle)
       }
@@ -199,16 +198,6 @@ export default class ColResizable {
     this.drag.x = x
     this.drag.style.left = `${x}px`
 
-    if (this.options.liveDrag) {
-      this.syncCols(index)
-      this.syncGrips()
-      const { onResizing } = this.options
-
-      if (isFunction(onResizing)) {
-        onResizing(e)
-      }
-    }
-
     return false
   }
   syncCols(i, isOver) {
@@ -253,7 +242,7 @@ export default class ColResizable {
       const { onResized } = this.options
       if (isFunction(onResized)) {
         onResized(this.object, this.drag)
-        this.init()
+        this.createGrips(false)
       }
     }
     this.drag = null

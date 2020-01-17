@@ -1,21 +1,22 @@
 <template>
   <th
-    :class="{'fixed-left-th':fixed==='left','fixed-right-th':fixed==='right'}"
+    :class="{'fixed-left-th':fixed==='left','fixed-right-th':fixed==='right','zd-table-cloumn-tr-th-only':true}"
     :style="{'min-width':widthValue+'px', 'width':widthValue+'px'}"
     :colspan="colspan"
     :rowspan="rowspan"
     scope="row"
   >
-    <el-tooltip :content="label" :disabled="!(showOverflowTooltip && widthValue && getTextLength(label) * tdFontSize > widthValue)" placement="top" effect="light">
+    <div id="zd-table-cloumn-tr-content" class="zd-table-cloumn-tr-content">
       <span :class="{'showOverflowTooltip':showOverflowTooltip}" :style="{'width':'inherit'}"> <slot>{{ label }}</slot></span>
-    </el-tooltip>
+      <!-- // 悬浮显示 -->
+      <div v-if="showOverflowTooltip && widthValue && getTextLength(label) * tdFontSize > widthValue" id="zd-table-cloumn-tr-hover-box">{{ label }}</div>
+    </div>
     <div v-if="sortable" class="sort">
       <!-- 排序 -->
       <!-- 从小到大 -->
       <div :class="'ascending '+classNameSort+'ascending'" @click="sortChange('ascending',classNameSort+'ascending')" />
       <!-- 从大到小 -->
       <div :class="'descending '+classNameSort+'descending'" @click="sortChange('descending',classNameSort+'descending')" />
-      <!-- border-top-color: #409eff; -->
 
     </div>
   </th>
@@ -76,23 +77,13 @@ export default {
     '$parent.data'(newValue, oldValue) {
       // 监听table值的变化
       this.data = newValue
-      setTimeout(() => {
-        const tableName = '.zd-table-wrapper' + this.$parent.className
-        const domElemTable = document.querySelector(tableName)
-        if (this.$parent.$props.headerDragend) {
-          createColResizable(domElemTable, {
-            liveDrag: false,
-            onResized: (e) => {
-              this.resetFun()
-            }
-          })
-        }
-      }, 1000)
+      this.resetFun()
     },
     fixed(newValue, oldValue) {
       if (newValue) {
         setTimeout(() => {
           setFixedWidthTh(this.$parent.className, newValue) // 设置多个固定列的距离
+          setFixedWidthTd(this.$parent.className, newValue) // 设置多个固定列的距离
         }, 200)
       }
     }
@@ -103,12 +94,12 @@ export default {
     this.resetFun()
     setTimeout(() => {
       const tableName = '.zd-table-wrapper' + this.$parent.className
-      if (this.$parent.$props.headerDragend) {
+      if (this.$parent.$props.headerDragend && this.$parent.$props.multisHead === 1) {
         const domElemTable = document.querySelector(tableName)
         createColResizable(domElemTable, {
-          liveDrag: false,
           onResized: (object, drag) => {
           // 改变表头的省略宽度
+            this.widthValue = object.w
             const dom = document.getElementsByClassName('zd-table-wrapper' + this.$parent.className)[0].getElementsByClassName('zd-table-cloumn-tr')
             for (let i = 0; i < dom.length; i++) {
             // 主要针对超出省略
@@ -122,7 +113,7 @@ export default {
                 thDom[drag.index + 1].style.width = `${object.w2}px`
               }
             }
-            this.resetFun()
+            this.resetFun(true)
           }
         })
       }
@@ -130,13 +121,15 @@ export default {
   },
   methods: {
     getTextLength,
-    resetFun() {
+    resetFun(start = false) {
       this.data = this.$parent.data
       this.widthValue = (this.minWidth || this.width).replace('px', '')
       if (this.fixed) {
         setTimeout(() => {
           setFixedWidthTh(this.$parent.className, this.fixed) // 设置多个固定列的距离
-          setFixedWidthTd(this.$parent.className, this.fixed)
+          if (start) {
+            setFixedWidthTd(this.$parent.className, this.fixed)
+          }
         }, 200)
       }
       if (this.showOverflowTooltip) {
