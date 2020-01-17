@@ -298,7 +298,7 @@ export default {
   position: relative;
 }
 .col-resize-container + .table-col-resizer:first-of-type {
-  table-layout: fixed;
+  // table-layout: fixed;
 }
 .col-resize-container .active-drag .icon {
   visibility: visible;

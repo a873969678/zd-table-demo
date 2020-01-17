@@ -159,6 +159,7 @@ export default class ColResizable {
   }
 
   onMouseMove(e) {
+    // 鼠标拖拽一栋
     e.preventDefault()
     if (!this.drag) {
       return false
@@ -180,11 +181,11 @@ export default class ColResizable {
 
     x = Math.max(min, Math.min(max, x))
 
-    const inc = x - this.drag.initLeft
+    const inc = x - this.drag.initLeft // 拖拽的px数
     const domElmThNow = this.domElmTableTheadThList[index]
     const domElmThElmNext = this.domElmTableTheadThList[index + 1]
 
-    const w = domElmThNow.w + inc
+    const w = domElmThNow.w + inc // 加到拖拽元素的宽度中
     const w2 = domElmThElmNext.w - inc
     // 最大最小
     const minWidthOne = tryParseInt(this.domElmTableTheadThList[index].getAttribute('data-min-width'))
@@ -195,7 +196,6 @@ export default class ColResizable {
     } else if (minWidthTwo > w2) {
       x = (domElmThElmNext.w - minWidthTwo) + this.drag.initLeft
     }
-
     this.drag.x = x
     this.drag.style.left = `${x}px`
 

@@ -239,13 +239,15 @@
           <div>
             <zd-table border striped :data="data" header-dragend>
               <!-- 表头 -->
-              <zd-table-head label="字段1" />
+              <zd-table-head label="字段1" fixed="left" />
+              <zd-table-head label="字段1" fixed="left" />
               <zd-table-head label="这个是比较长的宽度这个是比较长的宽度这个是比较长的宽度" />
               <zd-table-head label="这个是比较长的宽度会超出省略这个是比较长的宽度会超出省略" width="200px" show-overflow-tooltip />
               <zd-table-head v-for="(item,index) in 100" :key="index" label="字段2" />
               <!-- 主体 -->
               <template #tbody="scope">
-                <zd-table-body prop="name" :data="scope.row" />
+                <zd-table-body prop="name" fixed="left" :data="scope.row" />
+                <zd-table-body prop="name" fixed="left" :data="scope.row" />
                 <zd-table-body prop="name5" :data="scope.row" width="200px" show-overflow-tooltip />
                 <zd-table-body prop="name5" :data="scope.row" width="200px" show-overflow-tooltip />
                 <zd-table-body v-for="(item,index) in 100" :key="index" prop="name2" :data="scope.row" />
@@ -815,7 +817,7 @@ sortMethod(type, label) {
   .left-menu{
     width: 15%;
     margin-top: 50px;
-    height: 100%;
+    height: 90%;
     overflow-x: auto;
     position: fixed;
   }
