@@ -77,14 +77,11 @@ export default {
     '$parent.data'(newValue, oldValue) {
       // 监听table值的变化
       this.data = newValue
-      this.resetFun()
     },
     fixed(newValue, oldValue) {
       if (newValue) {
-        setTimeout(() => {
-          setFixedWidthTh(this.$parent.className, newValue) // 设置多个固定列的距离
-          setFixedWidthTd(this.$parent.className, newValue) // 设置多个固定列的距离
-        }, 200)
+        setFixedWidthTh(this.$parent.className, newValue) // 设置多个固定列的距离
+        setFixedWidthTd(this.$parent.className, newValue) // 设置多个固定列的距离
       }
     }
   },
@@ -92,32 +89,30 @@ export default {
   },
   mounted() {
     this.resetFun()
-    setTimeout(() => {
-      const tableName = '.zd-table-wrapper' + this.$parent.className
-      if (this.$parent.$props.headerDragend && this.$parent.$props.multisHead === 1) {
-        const domElemTable = document.querySelector(tableName)
-        createColResizable(domElemTable, {
-          onResized: (object, drag) => {
+    const tableName = '.zd-table-wrapper' + this.$parent.className
+    if (this.$parent.$props.headerDragend && this.$parent.$props.multisHead === 1) {
+      const domElemTable = document.querySelector(tableName)
+      createColResizable(domElemTable, {
+        onResized: (object, drag) => {
           // 改变表头的省略宽度
-            this.widthValue = object.w
-            const dom = document.getElementsByClassName('zd-table-wrapper' + this.$parent.className)[0].getElementsByClassName('zd-table-cloumn-tr')
-            for (let i = 0; i < dom.length; i++) {
+          this.widthValue = object.w
+          const dom = document.getElementsByClassName('zd-table-wrapper' + this.$parent.className)[0].getElementsByClassName('zd-table-cloumn-tr')
+          for (let i = 0; i < dom.length; i++) {
             // 主要针对超出省略
-              const thDom = dom[i].getElementsByClassName('zd-table-cloumn-tr-td')
-              if (thDom[drag.index]) {
-                thDom[drag.index].style.minWidth = `${object.w}px`
-                thDom[drag.index].style.width = `${object.w}px`
-              }
-              if (thDom[drag.index + 1]) {
-                thDom[drag.index + 1].style.minWidth = `${object.w2}px`
-                thDom[drag.index + 1].style.width = `${object.w2}px`
-              }
+            const thDom = dom[i].getElementsByClassName('zd-table-cloumn-tr-td')
+            if (thDom[drag.index]) {
+              thDom[drag.index].style.minWidth = `${object.w}px`
+              thDom[drag.index].style.width = `${object.w}px`
             }
-            this.resetFun(true)
+            if (thDom[drag.index + 1]) {
+              thDom[drag.index + 1].style.minWidth = `${object.w2}px`
+              thDom[drag.index + 1].style.width = `${object.w2}px`
+            }
           }
-        })
-      }
-    }, 1000)
+          this.resetFun(true)
+        }
+      })
+    }
   },
   methods: {
     getTextLength,
@@ -125,12 +120,10 @@ export default {
       this.data = this.$parent.data
       this.widthValue = (this.minWidth || this.width).replace('px', '')
       if (this.fixed) {
-        setTimeout(() => {
-          setFixedWidthTh(this.$parent.className, this.fixed) // 设置多个固定列的距离
-          if (start) {
-            setFixedWidthTd(this.$parent.className, this.fixed)
-          }
-        }, 200)
+        setFixedWidthTh(this.$parent.className, this.fixed) // 设置多个固定列的距离
+        if (start) {
+          setFixedWidthTd(this.$parent.className, this.fixed)
+        }
       }
       if (this.showOverflowTooltip) {
         if (document.getElementsByTagName('td').length > 0) {

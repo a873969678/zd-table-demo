@@ -1,7 +1,13 @@
 <template>
-  <div id="zd-table" :class="{'zd-table':true, [className]:true ,'zd-table-border-div': border}" :style="{'max-height':height,'height':height}">
+  <div id="zd-table" :ref="'zdZable'+className" :class="{'zd-table':true, [className]:true ,'zd-table-border-div': border}" :style="{'max-height':height,'height':height}" @scroll="handleScroll">
     <!-- zd-table-striped 间隔色 zd-table-border 边框 -->
-    <table :class="{'zd-table-wrapper':true,['zd-table-wrapper'+className]: true, 'zd-table-striped':striped,'zd-table-border':border}">
+    <table
+      :class="{'zd-table-wrapper':true,['zd-table-wrapper'+className]: true, 'zd-table-striped':striped,'zd-table-border':border}"
+      style="position:relative"
+      :style="{
+        height: contentHeight
+      }"
+    >
       <thead>
         <tr class="zd-table-cloumn-tr zd-table-cloumn-tr-th">
           <slot />
@@ -15,8 +21,8 @@
           <slot name="sumPrepend" />
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="(item, index) in data" :key="index" :class="{'zd-table-cloumn-tr':true, [rowClassName(index, item) || '']:true}" @dblclick.stop="rowDblclick(index, item, $event)" @click.stop="rowClick(index, item, $event)" @mouseenter="cellMouseEnter(index, item, $event)" @mouseleave="cellMouseLeave(index, item, $event)">
+      <tbody ref="content" style="position: absolute;">
+        <tr v-for="(item, index) in visibleData" :key="index" :class="{'zd-table-cloumn-tr':true, [rowClassName(index, item) || '']:true}" @dblclick.stop="rowDblclick(index, item, $event)" @click.stop="rowClick(index, item, $event)" @mouseenter="cellMouseEnter(index, item, $event)" @mouseleave="cellMouseLeave(index, item, $event)">
           <slot name="tbody" :row="item" :$index="index" />
         </tr>
         <tr class="zd-table-cloumn-tr sum-cloumn sum-cloumn-append">
@@ -24,7 +30,7 @@
           <slot name="sumAppend" />
         </tr>
       </tbody>
-      <tbody v-if="data.length === 0">
+      <tbody v-if="visibleData.length === 0">
         <tr>
           <td class="fixed-left-th" colspan="20">暂无数据</td>
         </tr>
@@ -35,7 +41,33 @@
 
 <script>
 import { setFixedWidthHead } from './table'
+/**
+  *
+  * @param fn {Function}   实际要执行的函数
+  * @param delay {Number}  延迟时间，也就是阈值，单位是毫秒（ms）
+  *
+  * @return {Function}     返回一个“去弹跳”了的函数
+  */
+function debounce(fn, delay) {
+  // 定时器，用来 setTimeout
+  var timer
 
+  // 返回一个函数，这个函数会在一个时间区间结束后的 delay 毫秒时执行 fn 函数
+  return function() {
+    // 保存函数调用时的上下文和参数，传递给 fn
+    var context = this
+    var args = arguments
+
+    // 每次这个返回的函数被调用，就清除定时器，以保证不执行 fn
+    clearTimeout(timer)
+
+    // 当返回的函数被最后一次调用后（也就是用户停止了某个连续的操作），
+    // 再过 delay 毫秒就执行 fn
+    timer = setTimeout(function() {
+      fn.apply(context, args)
+    }, delay)
+  }
+}
 export default {
   name: 'ZdTable',
   props: {
@@ -86,27 +118,70 @@ export default {
   },
   data() {
     return {
+      visibleData: [],
+      coumnHeight: 0,
+      contentHeight: 0,
       className: (new Date().getTime()).toString() // 独一无二类名，防止一个页面多个table冲突
     }
+  },
+  computed: {
+
   },
   watch: {
     data(newValue, oldValue) {
       this.data = newValue
+      const SI = setInterval(() => {
+        this.coumnHeight = this.getCoumnHeight()
+        this.contentHeight = this.getContentHeight()
+        if (this.coumnHeight > 0) {
+          clearInterval(SI)
+        }
+      }, 1000)
+      this.visibleData = this.data.slice(0, 20)
     }
   },
   mounted() {
-    const domTable = document.getElementsByClassName(this.className)[0]
-    // 首次判断右边是否固定并且有滚动条
-    if (domTable.clientWidth !== domTable.scrollWidth - domTable.scrollLeft) {
-      setTimeout(() => {
-        this.addOrRemoveClass(domTable, 'add', 'right')
-      }, 500)
-    }
-    domTable.addEventListener('scroll', this.getScroll)
+    // const domTable = document.getElementsByClassName(this.className)[0]
+    // // 首次判断右边是否固定并且有滚动条
+    // if (domTable.clientWidth !== domTable.scrollWidth - domTable.scrollLeft) {
+    //   this.addOrRemoveClass(domTable, 'add', 'right')
+    // }
+    // domTable.addEventListener('scroll', this.getScroll)
     // 固定，多表表头与合计的位置
     setFixedWidthHead(this.className)
   },
   methods: {
+    handleScroll: debounce(function() {
+      const scrollTop = this.$el.scrollTop
+      this.updateVisibleData(scrollTop)
+    }, 8),
+    updateVisibleData(scrollTop) {
+      scrollTop = scrollTop || 0
+      const visibleCount = Math.ceil(this.$el.clientHeight / this.coumnHeight)
+      const start = Math.floor(scrollTop / this.coumnHeight)
+      const end = start + visibleCount
+      this.visibleData = this.data.slice(start, end)
+      this.$refs.content.style.webkitTransform = `translate3d(0, ${start * this.coumnHeight}px, 0)`
+    },
+    getContentHeight() {
+      const tableDom = this.$refs['zdZable' + this.className]
+      const onlyColumnHeightTheader = tableDom.getElementsByTagName('thead')
+      if (onlyColumnHeightTheader.length > 0) {
+        const height = onlyColumnHeightTheader[0].clientHeight // 表头高度
+        return this.data.length * this.coumnHeight + height + 'px'
+      } else {
+        return 0
+      }
+    },
+    getCoumnHeight() {
+      const tableDom = this.$refs['zdZable' + this.className]
+      const onlyColumnHeight = tableDom.getElementsByClassName('zd-table-cloumn-tr-tbody')
+      if (onlyColumnHeight.length > 0) {
+        return onlyColumnHeight[0].clientHeight + 1
+      } else {
+        return 34
+      }
+    },
     getScroll(e) {
       // 滚动条事件 固定列添加阴影效果
       if (e.target.scrollLeft > 0) {

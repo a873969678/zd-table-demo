@@ -64,9 +64,7 @@ export default {
     },
     fixed(newValue, oldValue) {
       if (newValue) {
-        setTimeout(() => {
-          setFixedWidthTd(this.$parent.className, newValue) // 设置多个固定列的距离
-        }, 200)
+        setFixedWidthTd(this.$parent.className, newValue) // 设置多个固定列的距离
       }
     }
   },
@@ -78,9 +76,7 @@ export default {
     resetFun() {
       this.widthValue = (this.minWidth || this.width).replace('px', '')
       if (this.fixed) {
-        setTimeout(() => {
-          setFixedWidthTd(this.$parent.className, this.fixed) // 设置多个固定列的距离
-        }, 200)
+        setFixedWidthTd(this.$parent.className, this.fixed) // 设置多个固定列的距离
       }
       if (this.showOverflowTooltip) {
         if (document.getElementsByTagName('td').length > 0) {
